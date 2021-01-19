@@ -1,0 +1,653 @@
+                LINEX COMMANDS  BY GOVARDHAN
+				
+				******create a new file****
+				
+				touch vardhan.txt
+                touch sample.txt	
+				
+				ls -lh (find size)
+				
+***touch command is used to create 0 size file****
+
+******similarly 
+
+              vi govi.txt
+			  vi jmsth.txt
+			   
+	********if you want see the content in file ********
+	    
+		     cat vardhan.txt
+		     cat sample.txt
+			 
+			 write to some content in a file
+
+Editors:--
+
+               vi / vim /gedit
+
+     $   vi editor is the latest			   
+     $   vim editor is oldest one
+	 
+	 ----->open the file 
+	 
+	 vi vardhan.txt
+	 
+	 then press the "i" now it is in "insert mode"
+
+    write the some content then
+	
+	ESC + SHIFT + : wq        (for save )
+	
+	ESC + SHIFT + : q!        (dont save)
+	
+	echo --->is using to debugging purpose
+	
+	echo --> command print something 
+ 
+    echo"govardhan" 
+	
+	cp---> command is used to copy content in one file to another
+	
+	cp vardhan.txt sample.txt
+	
+	mv ---> move command is used to move (or) rename the file but content is same
+
+     mv vardhan.txt sample.txt
+
+     man cp --> discription of cp command
+	 
+      vi access.log
+	  
+	 write something (like resume ) 
+	 
+    cat access.log  ----> huge log file (big log file )
+	
+i want see first 10 lines in this file 
+
+      head access.log
+	  head -20 access.log   (first 20 lines)
+	  tail -20 access.log   (last 20 lines)
+	   
+	   less access.log
+	   more access.log
+	   
+	  rm -rf vardhan.txt (is used to delete the file )
+	  
+	  mkdir --> is used to make the diretry
+         ls -d */  (to find the directorys)
+
+	  mkdir vardhan
+	  
+	  pwd
+	  
+	  mkdir -p  one/two
+	  cd one/
+	  
+	  cd .. come back
+	  cd ../.. (or) cd ~   (home directorys)
+
+i want to be a perticular line in file  
+
+cat vardhan.txt	| grep class<----serching a word (or) line
+
+cat vardhan.txt | grep -i class (-i ignore weathere it is capital or small)
+
+    I WANT SEE TWO WORDS AT A TIME
+	
+	cat vardhan.txt | egrep -i "class|from"
+	
+	
+	***IF CONFIGARATION******
+
+      I WANT PRINT ONLY IP ADDRESS
+	      
+		  ifconfig
+		  
+	  ifconfig | grep netmask
+	  
+	  ifconfig | grep -w netmask ( w means serching word count )
+	  
+	  ifconfig | grep -w bytes    (example)
+	  
+	  
+     
+	     ***********AWK COMMAND ****
+	
+	awk is used to maniplating the content in file .
+	
+	i want to print only ip address
+
+   ifconfig | egrep -w netmask | awk {print}
+
+
+   ifconfig | egrep -w inet6 | awk-F {print}
+   
+   F --> is the filed supparator (space:supparator)
+   
+   ifconfig | egrep -w netmask | awk '{print$2}'
+
+   
+   ifconfig | egrep -w netmask | awk '{print$2}' | awk -F ':' '{print$2}'
+   
+   COUNT IPC (how many ip's)
+   
+   ifconfig | grep -w addr | awk '{print$2} | awk -F ':' '{print$2}' | wc -l 
+   
+                   *******CRONTAB*******
+ 
+----crontab for using schedular for a perticular job for a perticular time 
+
+*            *                  *                 *                * 
+mins         hour               day of            month of          day of  
+                              the month          the year          the weak
+0-59         0-23                1-31               1-12              0-6
+   
+   
+   
+   i want to excute ip addressand get 
+   
+   cat access.log | grep -i get | awk - F '-' {print$1,$4}
+
+   remove the duplecate 
+    
+    ---> unique	
+   ---->  unique -c 
+   
+   cat access.log | grep -i get | awk -F '_' '{print$1,$3}' | uniq -c | sort 
+   
+   Requirement:--
+   
+   i want to excute more requirement ip address and post 
+   
+   cat access.log | grep -i post 
+   
+   cat access.log | grep -i post | awk '{print$1,$6}'
+   
+   
+   
+          ******* TROUBLE SHOOTING ********
+  
+
+   uptime : is used to find load average
+   
+         06:12:47 up 7 min,  2 users,  load average: 0.03, 0.11, 0.07
+
+   du    :   is used to disk utilization
+   
+16      ./snap
+4       ./one/two
+8       ./one
+4       ./two/one
+8       ./two
+  
+   du -h : is used to disk utilization "h" means human readable 
+
+16K     ./snap
+4.0K    ./one/two
+8.0K    ./one
+4.0K    ./two/one
+8.0K    ./two
+   
+	
+   df    :  is used to disk utilization
+   
+Filesystem     1K-blocks    Used Available Use% Mounted on
+udev              486680       0    486680   0% /dev
+tmpfs             100212     752     99460   1% /run
+/dev/xvda1       8065444 1345228   6703832  17% /
+tmpfs             501052       0    501052   0% /dev/shm
+tmpfs               5120       0      5120   0% /run/lock
+tmpfs             501052       0    501052   0% /sys/fs/cgroup
+
+  
+   df -h : is used to disk utilization  "h" means human readable
+   
+Filesystem      Size  Used Avail Use% Mounted on
+udev            476M     0  476M   0% /dev
+tmpfs            98M  752K   98M   1% /run
+/dev/xvda1      7.7G  1.3G  6.4G  17% /
+tmpfs           490M     0  490M   0% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock
+tmpfs           490M     0  490M   0% /sys/fs/cgroup
+/dev/loop0       97M   97M     0 100% /snap/core/9804
+
+	
+   free  : used to find out RAM 
+
+              total        used        free      shared  buff/cache   available
+Mem:        1002108      123592      198824         752      679692      729376
+Swap:             0           0           0
+
+
+  free -h : used to find out RAM "h" means human readable
+  
+                total        used        free      shared  buff/cache   available
+Mem:           978M        120M        194M        752K        663M        712M
+Swap:            0B          0B          0B
+
+  
+   top : is used to check the "" CPU UTILLIZATION ""
+      
+  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
+ 2564 root      20   0   44512   3912   3312 R  0.3  0.4   0:00.04 top
+    1 root      20   0  159868   9128   6788 S  0.0  0.9   0:02.86 systemd
+    2 root      20   0       0      0      0 S  0.0  0.0   0:00.00 kthreadd
+    3 root       0 -20       0      0      0 I  0.0  0.0   0:00.00 rcu_gp
+    4 root       0 -20       0      0      0 I  0.0  0.0   0:00.00 rcu_par_gp
+
+   
+  ****ls -ltri
+
+ ****ls -ltra
+
+  **ls -d */
+  ** ls -lh
+  
+
+
+                      soft link & hard link
+
+                        ln -s    soft link 
+               			ln        hard link
+
+
+                        create a one file
+  
+                              vi file1.txt
+                               ls -ltri
+                        256056 <------inode value
+						
+                       -------:hardlink:---
+							  
+					  ln file1.txt hardfile1.txt
+                           
+	     			      same inode value
+						  
+    if any changes in file1.txt ,that change will happend in hardfile1.txt also.
+ 
+            $ if the source file deleted 
+  then same contentent is available in hardfile.txt or destination file.
+			
+
+ 					  -------:softlink:-------
+                                 
+				 			  vifile2.txt
+                           
+		     		           ls -ltri
+                                    
+						ln -s file2.txt softfile2.txt
+	                              ls -ltri
+								  
+                 but softlink did not has same inode value
+
+  $  if any changes in file2.txt ,that change will happend in softfile.txt also.
+
+  $    if the source file deleted, then we con't access the softfile.txt   
+			
+
+        write and excute the shell scripting starting stage
+
+                          vi printname.sh 
+                            #!/bin/bash
+                             echo "goverdhan devops engineer"								 
+                             
+							 esc+:wq!	 save the file
+
+                               sh printname.sh     (excute the what you read in this)
+
+            chmod:- we should change the read,write,permissions,through chmod
+
+                             chmod +x printname.sh
+     
+                         	 ./printname.sh
+
+                              vi govi.sh
+                              #!/bin/bash
+                               echo $1
+							  
+							  esc+:wq!	 save the file
+							  
+							  sh govi.sh
+first3 lettetrs owners,second 3letters group,next 3 lettrs others .							  
+							  
+							  read ------4
+							  
+							  write -----2
+							  
+							  excute-----1
+
+                           chmod 666 govi.sh
+						   
+				            chmod 764 govi.sh
+                            ./ govi.sh banglore
+							
+							 vi vardhan.sh
+							  
+                             #!/bin/bash
+                              echo '$1:' $1    <----print the first line
+                              echo '$2:' $2    <----print the second line
+                              echo '$*:' $*    <----print the all lines
+                              echo '$#:' $#    <----count the commands
+                              echo '$?:' $?    <----previous commands success or not
+							  
+							chmod +x vardhan.sh 
+
+                           ./vardhan.sh bangalore raining							
+							  
+							  wether if it is " 0 "  success
+							  
+							  wether if it is " 1  " error will appear
+  
+   
+	                     
+						          
+					   *******GIT INTRODUCTION******
+					
+					svn and git diffrence
+					  					 
+					   mkdir first
+					   
+					   cd first
+					   
+					   vi sample.txt
+					   
+					   write something in this 
+					   
+					 EXAMPLE : GOVERDHAN IS A DEVOPS ENGINEER
+					 
+					 ESC + :  + wq   (save it)
+
+
+                        git init   (it means project start now)
+
+               it will create a floder called git folder
+
+                     git add .
+                   
+				     git commit-m "added somthing" -a 
+
+      ****         for the first timing using        ***
+
+            git config --global user.name "govi321"
+			
+			git config --global user.email "mgvardhan@gmail.com"
+			
+			git push origin master
+			
+			one error accured   
+			
+			create a repocitory in git hub "first "
+
+            git remote add origin "that url"
+
+             git remote -v 
+
+            git  add.
+
+            git commit -m "added something"
+ 
+               git push origin master
+
+
+           ******git merge conflict & branching ****
+
+                ***git branch concept***
+
+                   git branch -l 
+
+                   git branch -la 
+
+                 now create a branch
+
+                git branch branch name
+
+                git branch bugfix
+
+                git branch --list
+
+****move to master branch to your created branch ****
+
+               git checkout bugfix
+
+
+    now we are created a sample file
+
+                   vi bugfixfile.txt
+
+             write something in this file 
+
+                        git add .
+                   
+				    git commit -m "bugfixfile added" -a 
+					
+					git push origin bugfix
+					
+	*****merge bugfix branch to master branch***
+	
+	                git checkout master
+					
+					git merge bugfix
+					
+					git add .
+					
+					git commit -m "merging" -a
+					
+					git push origin master
+				
+how to check the live logs 				
+					
+					git log filename
+
+how to delete the branch in our local machine
+
+                    git branch -d bugfix
+
+then you can push the branch it will delete in your git hub repocitory also
+
+                    git push origin -d bugfix
+					
+
+                    ****taging concept***					
+                   
+				  taging is used for the realse indentification
+
+$ two ways of taging
+
+1 annoted taging                        2 light weight taging
+
+git tag -a v1.0 -m "this is me "           git tag v1.1
+    
+	
+	                      git tag -l
+						  
+						  git push origin v1.0
+						  
+2  light weighted tag create
+
+                         git tag v1.1
+ 
+                         git tag --list
+                       
+					     git push origin v1.0						 
+
+how we do latter tagging
+
+                             git log
+							 
+then we take 7 letters of commit message
+							 
+						  git tag v1.2
+						  
+                          git push origin v1.2
+
+how to push multiple tags at a time 
+
+                          git push origin --tags
+
+                          git tag --list
+
+how to delete the tags  in local machine
+
+                          git tag -d tag number (v1.0,v1.2)	like this	
+
+                         EX: git tag -d v1.0
+						 
+how to delete the tags in github repocitory						 
+
+                          git push origin:refs/tags/version
+						  
+						  
+						  
+						  *******undo changes****
+						  
+	1git checkout         2git reset             3git revert
+						  
+	I created a folder in this i'll create a samplefile
+
+then       i did not git add .         git checkout filename
+           i did not git commit 	
+			
+it will remain you exactly where your
+
+
+
+           i did a git add .          git rest is used
+           i did a git commit        		   
+						  
+						  git reset is 3 types
+						  
+						  1 soft
+						  2 mixed
+						  3 hard
+
+1 git reset --soft HEAD~1
+
+inthis history it means commit message will be deleted
+
+                         repo
+                         history
+   git commit-->         staging area/index 		   
+   git add .             ---------						  
+						  
+		then right now your in git add .only
+
+
+2 git reset --mixed 
+     default option
+	
+                         repo
+                         history
+   git commit-->         staging area/index 		   
+   git add .             ---------		
+
+	in this git commit & git add will be deleted
+
+only modifide file is available at here
+
+3 git reset --hard HEAD~1
+
+                       repo
+                         history
+   git commit-->         staging area/index 		   
+   git add .             ---------		
+   
+   in this git commit & git add & and modified file also gone ...
+   
+  
+  3 git revert 7 letters of commit messages
+  
+     i did git add .
+     i did git commit 
+     i did git push origin master	
+
+	    
+		
+		              ***git stash* 
+	
+                project1      |	     project2
+				          switching	     
+
+	                
+					vi sample.txt
+					add something content in file
+					
+			----->	then  git stash 
+			
+			
+	before going to one project to another project
+	what we are at that place it will remained me 
+	
+	
+	              ***     git commit amend *****
+				  
+				  git commit amend is used to "Edit the last commit message"
+				  
+			i did            git add.
+			                 git commit -m "added something " -a 
+				
+                             git commit --amend				
+						  
+					
+					   *****   git rebase  ***
+					   
+		git rebase is used to edit the any commit message
+		
+                           git rebase HEAD~3  (shows the list)
+
+                           git rebase -i HEAD~3						   
+
+  			pick a2e2eal added last line
+			
+	     insted of pick        
+        we are use "reword"		Edit the lines   
+
+                    Esc + : +wq!   save it
+ 
+          Edit the message 2 times only
+		  
+		  rebase --skip
+		  
+		                *****   git cherry pick   ***
+
+
+                  master branch          |    bugfix branch
+
+
+             you need to apply from the master branch commit message to another 
+
+             branch we are using the cherrypick
+ 
+                         git to hotfix
+       
+	                   git cherry-pick 7letters 						 
+					
+					
+			   *******	git merge (vs) rebase *****
+			   
+			   
+			   
+			   git merge --squash feature(branch name) 
+			   
+			   
+			   "merge squash" is using auto merging perpose
+			   
+			   
+REBASE :-
+
+       we succesfully merge the feature branch to master branch .here we miss the 
+history commit messages of feature branch,if you want to history of featurre 
+branch commtted messages we should use "rebase"
+
+
+git fetch  :-
+
+    Download all history from the remote repocitory
+  	   
+			   
+					
+		 
+					 
+					   
+					   
+	
+	 
