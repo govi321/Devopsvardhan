@@ -1,0 +1,764 @@
+                             KUBERNETES
+		
+		
+                       *****MONITORING TOOLS ******	
+
+       1  nagios 
+       2  splunk
+       3  app dynamics
+       4  new relic
+       5  ganglia
+       6  sensu
+       7  sumo logic
+       8  datadog
+       9  elk stack (elastick search),(logstash) kibana beats
+       10 zabbix
+       11 nagios xi
+       12 cacti 
+       13 prometheus
+       14 grafana/cadvisor
+
+ prometheus:-
+
+------>go to instances-----> launch instace ubuntu--->t2.micro--->connect it -->past in git bash-->
+        sudo -i
+ search in google promothesis install
+
+curl-Lo:-https://github .com/promethus/prometheus/download/v2.9.2/prometheus-2.92linux-amd64.tar.gz
+
+                         ls -ltr
+          unzip the file
+
+          tar xvf proetheus-2.9.2    linux-admin64.tar.gz
+       
+	      cd prometheus-2.9.2.linux -admin/
+		  
+		  ls -ltr 
+		  
+		  vi prometheus	.yml 
+		  
+		  esc + : wq    (save it )
+ 
+           ./prometheus --config.file=prometheus.yml
+
+------>go to instance --launch vizard--> inbound--->edit--->add  9090 -->anywere
+
+--->take public DNS:9090 past in new window
+
+      prometheus dash board will open 
+
+
+      new metrics :--
+
+    take the same DNS :9090/metrics -->newtab
+
+    it will see that & it is in go language
+	
+	then refresh it 
+	   
+	   promhttp requist will change and increse it 6_13_14
+	   
+	   take --> promhttp_metirc_handle_total{code="200"}
+	   
+	   go to prometheus dash board
+	   
+	   Enable
+	        promhttp_metirc_handle_total{code="200"}       past it here
+			
+			
+			click --->Execute
+			
+			then you will see the graph
+			
+			ADD <----ADD one more graph 
+			
+			process_cpu_second_total
+			
+			click--> Execute
+			then you will the graph 
+			
+			ADD graph : 
+			rate(promhttp_metric_handler_requests_total{code="200"}[1m])
+			
+			click -->Execute
+			
+			   - 1h +
+			   check it out
+
+          count of prometheus
+  ADDgraph 
+      
+    count (prometheushttp_metric_handler_requests_total)
+
+    click --->Execute
+	
+	
+	                            NODE EXPORTER
+
+     wget  http://github.com/ prometheus/node_exporter/release/download/vo.17.0/node_exporter-0.17.0 linux_admin64.tar.gz
+  
+   run ---> tar xvzf node _exporter-0.17.0 linux _amd64.tar.gz
+
+      cd node_exporter-0.17.0 linux _amd64.tar.gz
+ 
+    node_exporter-0.17.0 linux _amd6464]$
+           
+		   cd ..
+		   cd prometheus-2.9.2 linux-amd64
+		    
+			ls -ltr
+		   
+		   vi prometheus.yml
+		   
+		   BELOW JOB NAME : 'prometheus'
+		   #metrics_path default to '/metrics'
+		   #scheme default to 'http'.
+		   static_config:
+		   -targets :['localhost:9090']
+		     job_name: 'node'
+			 #metrics_path default to '/metrics'
+		   #scheme default to 'http'.
+		   static_config:
+		   -targets :['localhost:9100']
+		   ESC + : wq  (save it )
+	then -->go to instance -->launch wizard--> edit---
+
+inbound rule---> 9090 -->anywere-->for promothesis
+                 9100 -->anywere-->for node exporter
+                 3000 -->anywere-->for kibana
+				 
+				 then open the promothesis dash_board
+				 
+				 ENABLE
+				
+    				node_cpu_seconds_total&node-disk-io-how
+			    
+				EXCUTE		 
+            		   
+		                ******INSTALL GRAFANA*******
+						
+		wget http://dl.grafana.com/oss/release/grafana-6.1.6 linux -and64.tar.gz
+run ---> tar -zxvf grafana-6.1.6 .linux-admd64.tar.gz
+path ---> cd grafana-6.1.6	
+             ls -ltr	
+			 
+			 cd config
+			 ls -ltr
+			 vi defaults.ini
+			  
+			    BELOW 
+				    logs=data/log 
+		type   ---> /.smtp
+		    ESC + : wq save it 
+			
+			cd ..
+			./bin/grafana-serverweb
+			
+			take the instance DNS :3000
+			grafana--> default user name & passwd is 
+			      admin & admin
+				  login
+				  then we will change the passwd -->save 
+				  |()|  select the data source
+				  
+				  Add data source
+then select the prometheus 		 		  
+ 
+					HTTP 
+	     			URL  http://localhost:9090
+                    ACCess    server (default)
+                   
+                     save & test
+
+                  go to step back
+                        home dash board
+                          + new dash board
+                 
+                   |()| ADD Query   select it
+
+                       noded -disk_io_time_weighted_second_total
+
+               now it will see the graph above
+
+             <-- new dash board 
+               select it 
+               /0\  <---alert mechanisam 
+
+                  notification chanels --->	Discard
+                   ADD chanel        <------just know about the knowledge
+
+                  new notification channel 
+
+                      name   govi-email
+                      Type    Email
+                      send on all alert   --ON
+                      Include image       --ON	
+
+                      EMAIL address        
+					  moguramgoverdhan@gmail.com
+
+                                 save
+                   <----go to back
+   
+                               HOME Dash board 
+
+                            +	New dashboard
+
+                           ADD  ||
+                         
+                           node_cpu_seconds_total
+
+                        /0\ creat Alert
+
+                     in    condition 	
+                         is above 5000
+
+                  Notification 
+      send to       govi.email
+      message  	    sidk io more 50000
+	  
+	                save it |  | <-----it is in top right
+
+                     name   disk io
+                             
+                            save 
+							
+ search in google------> node exporter grafana template
+ 
+             1860 will saw 
+			 
+			 go to grafan tab ----->left side 
+			              + creat 
+						  import <----click ---> Discard
+						  
+						  Grafana.com Dash board
+						  1860    <------template download auto matically
+						  
+						  Name         node exporter
+						  prometheus   prometheus  <----select it 
+ 
+                               import
+
+   now we will see the all the stuff
+
+        cpu utillization, memory   etc
+		
+		go to little bit down 
+		
+		-->memory details meminfo 
+		
+		memory anonymous \-/   <---click it 
+		
+		Edit 
+
+     now we are set the alert mechanism /o\ click 
+
+           create alert 
+
+           is above 50000000	
+
+                    save 
+             node exporter 
+                
+				 save
+
+
+                 
+
+				 ******* kubernetes -cluster-setup******
+				 
+				 documentsoft (installation kubernetes cluster on aws)
+				 
+				 just like master slave concept
+
+	take ubuntu -18.04--->	t2.medium 
+      insecurity gruop    http       8080
+                          https	     443
+					      custom tcp 6443
+
+              set the name as master
+
+           go to ec2 dash board --> connect it 
+
+              install step by step
+
+              sudo apt-get install -y apt-transport-https
+
+                   sudo su   or sudo -i 
+
+       curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -				   
+	   
+	   cat <<EOF > /etc/apt/sources.list.d/kubernetes.list 
+	   
+	    deb http://apt.kubernetes.io/ kubernetes-xenial main
+
+                    EOF
+					
+					apt-get update
+					apt-get install docker.io -y
+					
+					sudo usermod -a -G docker ubuntu
+					
+					docker -v 
+					systemctl restart docker 
+					
+					systemctl enable docker.service 
+					
+					apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+					
+					sudo apt-get install vim -y
+					
+					 vim /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+		
+                      (open the configaration file)	
+
+                    BELOW the EXTRA_ARGS 
+
+                Environment="cgroup-driver=systemd/cgroup-driver=cgroupfs"
+
+				ESC +: wq    (save it )	
+				
+				now we are creat a AMI IMAGE
+----> FIRST select the your created master -->Action-->image-->created image
+
+        NO rebook _/ right mark vundali  (will be like this )	
+
+        image name      vardhan-slave
+
+        Discription 	vardhan-slave
+
+             
+                         careate image 
+  
+                                 close
+
+
+               in gitbash   ---> kubeadm init 
+
+                  it will take time
+
+             And will see the initialized succesfully
+
+         kubeadm join 172.31.39.208:6643     
+
+        user ubuntu --->   kubectl get node		
+
+server local host :8080 was refused  because of "root" user
+
+ubuntu ---> mkdir -p $HOME/.kube
+
+             sudo cp -i /etc/kubernetes/admin.conf  $HOME/.kube/config 
+            
+             sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+               kubectl get node
+
+
+    NAME        STATUS        ROLES          AGE	
+IP 172.39       NOTREADY       MASTER        2M
+	
+
+   kubectl get pods --all-namespaces 
+   
+   CNI ERROR 
+   
+    sudo su
+
+ sysctl net.bridge.bridge-nf-call-iptables=1	
+
+     su ubuntu
+
+export kubever=$(kubectl version | base64 | tr -d '\n')
+
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"	 
+
+						
+	echo $kubever	
+	one token will come
+	
+	export kubever=$(kubectl version | base64 | tr -d '\n')
+
+kubectl get node
+
+NAME       STATUS      ROLE      AGE        VERSION
+IP 172.31  READY	  MASTER     9M           V10.23
+
+
+kubectl get pods --all-namespaces
+ 
+it will shows what are servers are running 
+
+-->now go to   MY AMIS
+
+AWS MARKET PLACE 
+
+COMMUNITY AMIS  
+
+t2.micro -->next
+no.of instance --->2
+
+launch the two instance --> 1. slave 
+                            2. slave
+
+then connect the slave1& slave2 in git bash
+
+kubeadm join 172.31.39.7:6443 --token hkpbe3.2zqo5rr900p0x06z --discovery-token-ca-cert-hash sha256:07a12d25cd5821b5245058434e39cb720cc0d5dbdd1ea0aa7061355510ad018f
+
+paste in slave 1 & 2
+
+then go to master git bash
+
+kubectl get nodes    
+   
+   Now status its going to be ready
+   
+   Now install dashboard
+
+
+*****ubuntu is the user******
+
+      kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml   
+							
+ nohup kubectl proxy --address 0.0.0.0 --accept-hosts '.*' &
+ 
+ nohup ::--- ignoring input and appending output to 'nohup.out'
+
+   kubectl -n kube-system get service kubernetes-dashboard
+
+   NAME      TYPE      CLUSTER      EXTERNAL    PORT     
+KUBERNETES	 cluster   10.107.136     none       443/tcp	
+
+
+we are editing the port number
+
+    kubectl -n kube-system edit service kubernetes-dashboard
+
+                      session Affinity :NONE
+                         type : cluster <---edit NodePort
+                                   ESC+:+wq    save 
+
+kubectl -n kube-system get service kubernetes-dashboard
+								   
+						  
+
+   NAME      TYPE      CLUSTER      EXTERNAL    PORT               AGE    
+KUBERNETES	 cluster   10.107.136     none       443:30351/tcp	   22H
+
+
+take the 30351 paste in master security group -->30351--->anywere
+
+take the master DNS :30351   <---fire fox
+
+potential security  risk -->advance 
+
+accept risk & continue ---> * token <--select
+
+----->   in master git bash 
+
+   kubectl -n kube-system describe secrets \
+   `kubectl -n kube-system get secrets | awk '/clusterrole-aggregation-controller/ {print $1}'` \
+       | awk '/token:/ {print $2}'
+ 
+--->then token will generate
+
+
+copy the token paste in a browser  (fire fox)
+
+now open the kubernetes dash board 
+
+in master git bash 
+
+kubectl | run testing --image=nginx --replicas =2 deployment "testing" created 
+
+kubectl get nodes
+kubectl get pods 
+go to master security group -->allow -->udp 6784-->anywere
+                                        udp  6783-->anywere
+			
+			kubectl get pods
+			
+                 Ready
+                  0/1  is this still happend 
+
+then go to slave instance  both 1&2 security group --> 8081-->anywere
+				                                       8080--> anywere
+													   8083 -->anywere
+                                                       80881 -->anywere
+													 
+
+	kubectl run testing --image=nginx --replica=2 deployment "testing" created
+	
+	we are deploynig kubernetes
+	
+	it will not work then go for a normal way
+	
+	               vi pod.yml
+
+                  
+apiVersion:v1
+kind: pod
+metadata:
+  name: hello-pod
+  labels:
+    zone: prod
+    version:v1	
+      spec:
+        containers:
+      - name:hello -ctr
+        image: nigelpoultion/k8sbook:latest
+        ports:
+      - container port:8080		
+	
+	   esc +:+wq!     save it 
+	   
+	   kubectl apply -f pod.yml
+
+        pod created
+
+                    READY     STATUS
+                      1/1	  RUNING	
+
+GO TO dash board   (refresh it ) pod will deploy 		
+
+
+
+
+
+
+                  ********** KUBERNETES REPLICASETS*****
+
+connect the master -->paste in git bash
+
+              ls -ltr
+           
+               kubectl get nodes
+
+               kubectl get pods
+			   
+			   kubectl get rs     <-----replicasets
+			   
+			   kubectl get svc    <-----service
+
+               kubectl get pods --all -namespaces
+			   
+			   kubectl -n kube-system get service kubernetes-dash board
+			   
+			   ports   443:30351/tcp   will come
+			   
+			   allow the port number your master -->30351
+			   
+			   take the public ip        (paste in fire fox)
+			   
+			   then go to -->advance-->accept and continue ---> * token
+			   
+			   ******TO GET TOKEN *******
+			   
+			   in git bash of master 
+			   
+			      kubectl -n kube-system describe secrets \
+   `kubectl -n kube-system get secrets | awk '/clusterrole-aggregation-controller/ {print $1}'` \
+       | awk '/token:/ {print $2}' 
+	   
+	   
+	   copy the token ---> past it in kubernetes dash board
+	   
+	   BELOW enter token -->sigin
+	   
+	   ---> git bash 
+	   
+	   vi my-rs.yml
+	   
+			   
+apiVersion:apps/v1
+kind: Replicaset
+metadata:
+  name: Web-rs
+spec:
+  replicas:3
+  selector:
+    matchlabels:
+	   app:hello-world
+	template:
+      metadata:
+        labels:
+          app:hello-world	
+      spec:
+        containers:
+      - name:hello -ctr
+        image: nigelpoultion/k8sbook:latest
+        ports:
+      - container port:8080		
+
+               Esc + : +wq!             (save it )
+			   
+			   
+			   run the file 
+			   
+			   kubectl apply -f my-rs.yml
+			   
+			   kubectl get rs 
+			   
+	NAME          DESIRED      CURREN       READY      AGE        		   
+	web-rs          3            3            3         19sec
+	
+	           kubectl  get pods
+	
+          	then open the kubernetes dash board refresh it
+
+           replicasets and podes will come 
+
+we are intensionally delete the 1 one pod 
+
+------->go to git bash
+
+           kubectl get pods
+		   
+		   one is terminating 
+		   
+	refresh the kubernetes dash board deleted pod is automatically
+	
+	********show the labels ****
+	
+	kubectl get rs web-rs --output=yml 
+	
+	kubectl get pods --show labels
+ 
+kubectl delete rs/web-rs --cascade=false replicaset.extensions "web-rs" deleted
+	
+*****deleted replicasets *****
+
+kubectl get pods --show labels
+
+kubectl get rs 
+
+cat my_rs.yml 
+
+kubectl apply-f my_rs.yml  
+
+   --->because of same label 
+   ----->only 3 pods will be run
+   
+   kubectl get pods 
+   
+   kubectl get rs
+   
+      I want to run 5 pods at a time
+               ******below the (replicas:5) count of pods******	  
+
+                   vi my_rs.yml	
+                 			   
+apiVersion:apps/v1
+kind: Replicaset
+metadata:
+  name: Web-rs
+spec:
+  replicas:5
+  selector:
+    matchlabels:
+	   app:hello-world
+	template:
+      metadata:
+        labels:
+          app:hello-world	
+      spec:
+        containers:
+      - name:hello -ctr
+        image: nigelpoultion/k8sbook:latest
+        ports:
+      - container port:8080		
+
+               Esc + : +wq!             (save it )
+	
+	
+	   kubectl apply -f my_rs.yml
+	   
+	   kubectl get pods 
+	   
+	   
+	   
+	                  ***** kubernetes service ****
+	
+----> Let's open the kubernetes dash board 
+
+
+kubectl -n kube-system get service kubernetes-dashboard
+
+
+     port 443:30351/tcp
+ will see this 
+
+
+then take the DNS:30351 IN "FIRE FOX"
+
+
+--->Advance --> Accept the risk and continue  --> * token
+
+        get  the token write in git bash
+		
+ 
+	  kubectl -n kube-system describe secrets \
+   `kubectl -n kube-system get secrets | awk '/clusterrole-aggregation-controller/ {print $1}'` \
+       | awk '/token:/ {print $2}' 
+	   
+	   we get the token --> past it in --> Enter token ---> save token
+	   
+	   kubectl get rs
+	   
+	   kubectl get pods --show-labels
+	   
+	   vi my_rs.yml  just saw the file
+ 	   
+	   we are creating a service : --
+	   
+	   vi svc.yml
+	   apiVersion:v1
+    kind: service
+   metadata:
+   name: hello-svc
+   labels:
+     app:hello-world	
+      spec:
+	   type:nodeport
+	   ports:
+	   -ports:8080
+	    nodeport:30001
+		protocol:Tcp
+       selector:
+         app:hellow-world
+		 
+		 Esc + : + wq!     save it
+
+       kubectl	apply -f svc.yml 
+
+       kubectl  get svc 
+
+                     CLUSTERIP     EXRTERNAL IP      PORTS
+
+                                                    8080:30001/Tcp
+                                                     443/Tcp
+
+          
+		           kubectl describe svc hello-svc
+				   
+				   --->then go instance adding port numbers
+				   
+				             Udp    6783    anywere 
+							 Udp    6784    anywere
+ 							 Tcp    300001  anywere
+							 
+							 
+							 take the ip address:30001
+				
+then we will see the ------>  Kubernetes Rocks !
+
+				
+                  													 
+	
+	   
+	   
+ 
+	
+	   
+	   
+	   
+	   
