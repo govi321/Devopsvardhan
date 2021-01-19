@@ -1,0 +1,118 @@
+                         vpc peering
+launch the 2 Ec2 machines same region (mubai)
+ 1server ---vpc1(TATA)--subnet1a--security group ---ssh---all trafic--keypair --create
+ 
+ 2server ---vpc2(INFY)--subnet1a--security group ---ssh--all trafic--keypair --create
+ 
+ 
+ then create a one more Ec2- machine in other region (singapoor)
+ 
+ 3server ---vpc3(ford)--subnet1a--security group ---ssh--all trafic--keypair --create
+ 
+ Then create a peer connection between   TATA and INFY
+
+create a peering 
+
+Peering connection name tag    tata-infy
+  VPC (Requester)*              tata vpc
+
+Account
+	* My account
+	 Another account
+Region
+	* This region (ap-southeast-1)
+	 Another Region
+VPC (Accepter)*             infy vpc
+
+                                               create peering connection
+
+
+    tata     routeing table
+
+destination                       target            status    propaget 
+10.1.0.0/16                       local             active       no 
+0.0.0.0/0                         igw-2fod7457      active       no 
+10.10.0.0/16(secondservervpccidr) pcx-f6b4699e    
+
+
+
+
+ infy     routeing table
+
+destination                       target            status    propaget 
+10.1.0.0/16                       local             active       no 
+0.0.0.0/0                         igw-2fod7457      active       no 
+10.10.0.0/16(firstservervpccidr) pcx-f6b4699e      
+  
+
+
+ lets ping each other 
+ 
+in TATA git bash ping 172.31.85.179 (INFY private ip)
+ 
+ in INFY  git bash ping 10.0.0.207 (TATA private ip)
+ 
+ 
+ lets create a peering connection to another region  
+
+ launch Ec2-machine
+
+
+create a peering 
+
+Peering connection name tag    hoi
+  VPC (Requester)*              hoi vpc
+
+then go to tata peering connection 
+
+then accept the hio peering connection.
+
+
+Account
+	* My account
+	 Another account
+Region
+	  This region (ap-southeast-1)
+	 *Another Region
+VPC (Accepter)*             tata vpc
+
+                                               create peering connection
+
+
+select the peering connection
+
+              attach
+
+lets peering each other 
+
+   tata     routeing table
+
+destination                       target            status    propaget 
+10.1.0.0/16                       local             active       no 
+0.0.0.0/0                         igw-2fod7457      active       no 
+10.10.0.0/16(secondservervpccidr) pcx-f6b4699e      
+172.31.0.0/16(ohiservervpccidr)   pcx-6565sbshb   
+
+
+
+
+
+then go to hoi routing table
+
+
+destination                       target            status    propaget 
+172.31.0.0/16                       local             active       no 
+0.0.0.0/0                         igw-2fod7457      active       no      
+10.1.0.0/16(ohiservervpccidr)   pcx-6565sbshb 
+
+
+lets peering to each other  
+
+ping 10.1.0.0/16 (ohi private ip)
+
+
+ping 172.31.0.0/16   (tata private ip)
+ 
+
+
+ 
