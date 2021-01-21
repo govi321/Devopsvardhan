@@ -1,0 +1,125 @@
+                               AUTOSCALING
+      Auto scaling helps you ensure that you have the correct number of EC2 instance availbale to handle the load for your application.
+You create collections of EC2 instance,called Auto scaling group.
+You can specify the minimum number of instaces and the maximum number of instances in auto scaling group,and Amazon EC2 auto scaling ensure that your group never goes above this size.
++++++++++++++++++++++++++++++++++++++++
+Step 1 : Create a load balancer .
+Step 2 : Create Launch configuration.
+Step 3 :Create auto scaling group.
+Step 4 :Create   Topic in  SNS
+Step 5 :Create  Alaram in cloud watch
+Step 6: Add Policy in Auto scaling
++++++++++++++++++++++++++++++++++++++++++++++++++++
+Step 1 : Create  load balancer
+Select Mumbai location
+Ec2 dashboard    -----load balancer --- create load balancer 
+Load balancer name –---   myloadbalancer 
+NEXT ---  Create new security group
+Security group name ---my security group
+Descriptions - my security group
+Lets open two ports     SSH    and      HTTP
+NEXT    --- > Configure health check 
+
+Response timeout -2
+Interval  -5
+Unhealthy threshold  -2 
+healthy threshold  -2
+next  ----next ---- review and create   ---- >   create --- > close.
+•	Create a launch configuration                              
+Under auto scaling 
+Select  launch configuration  ----  > create launch configuration
+Name :  my launch config
+Launch configuration name      ---  test launch config
+AMI  - ami-0d728fd4e52be968f 
+ Step 2: t2. Micro
+In advance details  user data 
+ #!/bin/bash
+ sudo su
+ yum update –y
+yum install httpd –y
+cd /var/www/html 
+echo “mywebserver1”  > index.html
+service httpd start
+chkconfig httpd on
+Next  --- >   Next - select existing security group :  mysecurity group 
+ADD --- > keypair     ---create launch configuaration.
+Create  Auto   Scaling   Group
+create a auto scaling group
+
+select the launch configuration  ----AUCTION –create auto scaling group 
+step 1 : Auto scaling group name  --- SampleASG-22
+based on my launch config   ----Next
+vpc –myvpc -----
+step 2 : subnet-apsouth -1a    -----Next 
+step 3 :Attach existing load balancer ---- >   chose from classic load balancer –select load balancer   ---- NEXT
+GROUP SIZE 
+Desired capacity ---1
+Minimum  capacity ---1
+Maximum  capacity ---2
+NEXT ---- NEXT---tags --webserver ---CREATE AUTO SCALING GROUP   
+SNS :  SIMPLE NOTIFICATION SERVICE
+Step 1 :create a topic ---go for the standard –--  Name --- Sample_topic -->        select the sample_topic  ----create a subscription ----select protocal ----eamil---End point----  moguramgoverdhan@gmail.com
+Step 2: Add Email address to topic
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Alarm  ---cloud watch 
+Increase Alarm 
+Go to alarm dash board ---select the alarm ---create alarm ----in Graph-----select matric --- and search cpu ---select --EC2>By Auto Scaling  Group------------
+Select the ------sampleASG22-- cpu utilization ---select matric
+Will saw the bash board
+Under--- conditions
+Threshold type ----static
+When ever cpu utilization is 
+Greater than
+80%(we required 20% only )
+Next
+Notification
+0	In alarm
+Select an SNS topic---select the existing topic
+Sent notification to -----sample_topic30 ----next ---name of the Alarm--- increasing alarm ---next ---create  alarm  
+
+Decrease alarm
+Go to alarm dash board ---select the alarm ---create alarm ----in Graph-----select matric --- and search cpu ---select --EC2>By Auto Scaling  Group------------
+Select the ------sampleash30 cpu utilization ---select matric
+Will saw the bash board
+Under--- conditions
+Threshold type ----static
+When ever cpu utilization is 
+Lower/equal (it means less than)
+20%(we required 5% only )
+Next
+0	In alarm
+Select an SNS topic---select the existing topic
+Sent notification to -----sample_topic30 ----next ---name of the Alarm--- Decreasing alarm ---next ---create  alarm  .
+Alarm name – ------ INCRESING_ALARM            80%
+Alarm name – ------ DECRESING_ALARM            20%
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Create policys
+Increasing policy.
+Ec2>Auto Scaling group > sampleAsg30
+Go to  auto matic scaling   add policy
+Policy type ----simple scaling 
+Scaling policy name --- increase policy
+Cloud watch alarm --- increase alarm 
+Take the action  
+Add                     1       capacity unit
+Create 
+
+Note : if the increasing alarm trigger then one server will be up.
+  Decreasing policy
+Ec2>Auto Scaling group > sampleAsg30
+Go to  auto matic scaling   add policy
+Policy type ----simple scaling 
+S caling policy name --- Decrease policy
+Cloud watch alarm --- Decrease alarm 
+Take the action  
+Remove                      1       capacity unit
+Create 
+
+INCREASE POLICY  ----                ADD 1           UNIT
+DECREASE POLICY  ----                ADD 1           UNIT
+
+
+
+
+
+
