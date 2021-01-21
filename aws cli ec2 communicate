@@ -1,0 +1,96 @@
+AWS CLI (COMMAND LINE INTERFACE )
+AWS CLI ON LINUX
+UNDERSTANDING  IAM ROLES
+
+AWS  CLI (command line interface)
+To conncet from cli ,we need to provide access key and secret key .
+Observation, in IAM dashboard , root access keys are deleted.
+
+Generation of root access keys
+Select  “delete your root access key ” ---  manage security credentials  --   > continue to security credentials .
+Access keys (access key id secret  access key )  -- create  anew access key--- > show access key .download the key file --- >
+Close.
+	 Go to IAM dashboard-- >    top rightside   ----- >  Below the quick links----
+- My access key--create new access key - show access key - then copy then  
+Access key id :   AKIAWJTYJ6SEFJNWABM4
+Secret access key :  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
+As keys generated ,we can accesss to aws from cli.
+We need to download  AND  install  aws cli tool.
+Search for “Aws cli tool for windows ” in google
+Select the first link  (docs.amazon.com)
+Select “download the aws cli msi installer  for windows 64 bit ” 
+Download and run the file .
+Once the cli installed ,we can see it in control panel ---uninstall program we can see “aws command kine interface”
+(just observation)
+++++++++++++++++++++++++++++++++++++
+Open command prompt
+	 aws configure
+	 Aws access key id [*****]: enter access key id from file download.
+	 Aws secret Access key id [*****]: enter access key id from file download.
+	Default region name : ap-southeast-1
+	Note : ap-south-1 (is nothing but region name of singapore.we can get this information from google )
+	Default region is north Virginia.
+	Default output format: text
+	We get the prompt. (we have logged in )
+++++++++++++++++++++++++++++++++++++++++
+From the console,   create two bucket.(two bckets are created by gui type.)
+We can see the list of bucket from command line .
+Search in google  “aws s3 command”
+Ex : aws s3 ls
+Create one bucket in gui model and 
+aws s3 ls 
+We can see the bucket.
+
+Now we are creating a one more bucket through 
+CLI command .
+            aws s3 mb s3://bucket-vardhan12345
+mb means --- > make bucket
+aws s3 ls
+We can see the bucket console.
+Upload the file in bucket.
+aws s3 cp sample.txt s3://bucket-vardhan12345/ sample.txt1
+Note : file does not exit 
+Cause : File should be available in 
+C:\WINDOWS\system32>
+I want file should be available here.
+Then upload one more time
+
+aws s3 cp AADARCARD s3://bucket-vardhan12345/ AADARCARD1
+
+  
+createting user from command line	
+
+search in google “aws iam command”
+
+aws iam create-user  --user-name user-1
+
+checked in gui
+
+
+we need to install aws cli on the ec2-machine , which we have create
+
+connected through putty.
+
+sudo su
+yum update –y
+aws configure
+
+	Aws access key id [*****]: enter access key id from file download.
+	 Aws secret Access key id [*****]: enter access key id from file download.
+	Default region name : ap-southeast-1
+	Default output format: text
+
+Now let’s create on new user 
+aws iam create-user  --user-name raj
+now let’s create a one group 
+
+aws iam create-group  --group-name devops
+
+(let’s veryfiy through console level.)
+
+
+
+
+
+ 
+  
