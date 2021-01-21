@@ -1,0 +1,190 @@
+                               S3 BUCKET AGENDA
+.Versioning
+.Statick website hosting
+.Classes/tiers 
+.Cross region  replication
+.Transfer Accelaration
+.Encryption
+.Tags
+.Metadata
+.Acl
+.Bucket policies
+.Life cycle management
+++++++++++++++++++++++++++++++++++++++++++
+Storge --------------> S3
+Lets delete the existing bucket
+•	Create a new bucket
+Bucket name ---- > version --- > vardhan917758
+Region  -mumbai
+Next ----Next ---- ---- > un check Block  all public access
+Next   --- create Bucket
+
+How to enable versioning
++++++++++++++++++++++++++
+Click on the bucket ---------- > properties tab
+(observation : By default version is disable)
+EDIT -------  >  Enable
+Save changes
+
+Lets upload on the object
+++++++++++++++++++++++++++++++++++++++
+Creat sample.txt ,content of the file let it be  “my first line”
+Upload the file ------>Next----- > grant public access ---->Next--->next
+
+First Advantage of versioning
+++++++++++++++++++++++++++++++++++++++++++++++++
+ We can recover deleted object
+Lets delete the object .
+Select the check box --- > Action ----- > delete 
+
+How can we recover 
+++++++++++++++++++++++++++++++++++
+Enable list version
+We can see the object and delete marker.
+Note :  when we delete ,object is not delete.
+             It is marked as deleted.
+So ,if you remove the delete marker ,we will get object .
+Select the delete marker check box ------ > Actions ---- > Delete ----> 
+Now disable list version
+Our object is back !!!
+
+2nd Advantage we can maintain different versions of the file.
+Open the same file in the desktop
+Add another line “this is second line” 
+Upload the same file again .
+Get the object URL, and check from the browser.we get the latest file.
+
+
+     Where can we see the older version of file.?
+ 
+Show the list version
+We can see the both versions 
+And we can download the older version of the file .
+Even if you delete the file  , we can recover  the both versions.
+Select the object ---- > action ---> delete ---- > delete
+Select the show button .
+We can see the both versions of the file .
+If you delete individual versions , we cannot recover.
+Note : if you delete the bucket ,we cannot recover.
+Lets delete the bucket.
+Now, the dash board is empty.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Static website hosting
+ 
+Lets create a bukcket
+Bucket name --- bucket456478
+Next ------ Next ----- > uncheck block  all public access  -- ----                   Next   -- >   create a bucket 
+
+Select the bucket ----- >properties --- >static website hosting 
+---- >  Edit --- > Enable ---- > Host a static website ----
+Index  document     ---  index.html
+Error document   ------- error.html
+Save 
+Now ,we need to create index.html and error.html 
+In this index.html file 
+<h1>welcome to my site </h1> 
+And the error.html file
+<h1>site under construction </h1>
+then two servers are upload in created bucket ----- > (bucket456478)
+Note : make it public.(permission ---ACL –(every one) public access)
+Now ,go to the properties of the bucket  --- > static website hosting ---  > get URL of the website (end point)
+Note : individual file should have public Access.
+
+what is the use of error.html?
+incase of  any reason, if index.html is not accessible 
+then error page will be displayed.
+
+Lets make the index.html page as private.
+Select  index.html --- > ACL ------ > Edit ---- > public Access --- >  --read --- > uncheck --- > save changes
+
+Now, refresh the URL ,we get error.html page !!!!
+Lets , delete the files ---- and delete the bucket .
+
+CRR    (cross region replication)
+Lets say two buckets (1st  bucket in Mumbai 2nd bucket in sydney region )
+We upload the object in Mumbai, the object should also be available in sydney.
+As we are replicating the  object in another region, it is called cross region replication .
+Vice-versa will not happend.
+If we delete the object in Mumbai, it will not deleted in sydney .
+If we edit  the object in Mumbai, it will not edited in sydney .
+Lets create bucket 
+Bucket name --- Mumbai-sfddhhdh
+Region –   Mumbai 
+Next --- > Next  --- > uncheck block all public access
+Next ---- > create bucket .
+
+Lets create 2nd   bucket 
+Bucket name --- sydny-sfddhhdh
+Region –   sydney
+Next --- > Next  --- > uncheck block all public access
+Next ---- > create bucket .
+Enable cross region replication in Mumbai.
+Select Mumbai bucket --- > management -- > replication  rules --- > create a replication rules --- > Enable bucket versioning ---- > replication rule name --- > CRR1
+Destination bucket --- > Sydney bucket  -- > Enable versioning -- > IAM role--- >
+ (to establish connection between two region, we need role ) 
+ IAM ROLE  -- create a new role
+Save .
+Lets upload object in Mumbai bucket ,it  will be replicated in sydney bucket .
+
+Transfer Acceleration 
+When we Enable transfer Acceleration ,data will be transferred to the Edge location and then from Edge location data will be transferred to the bucket.
+Select the Mumbai bucket --- > properties --- > Transfer acceleration --- > EDIT --- > Enable  -- >    save changes.
+  
+HOW CAN WE CHECK THE SPEED
+Properties ---- transfer acceleration  ---- > Learn more 
+Amazon s3 transfer acceleration speed comparision  tool  
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Encryption
+There are two types of encryption
+1)	AES -256 (Advance encryption standerd) single encryption.
+2)	AWS –KMS (key management service ) – double encryption  (more secured)
+Select the required encryption
+Select the bucket –properties ---default encryption—edit ----enable
+++++++++++++++++++++++++++++++++++++++++++
+Metadata & tags
+Metadata --- to provide the more information about the key value-pairs.
+Key  are predefinied . ex :     content-type,                            content-launguage      etc.
+Tags : to provide more information about the object key-value pairs.
+Key and values we need to provide.
+We need to upload the object first .
+Select the object --- > properties -- > we can see the metadata -- > and tags.
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Access controle list (ACL) And Bucket policys
+Acl :  To provide permission to another aws account.
+select the bucket ------- permission tab
+ACL -----edit ---ADD grantee
+Enter the canonical id ----save changes
+Note : Access controle list is available at bucket level, as well as object level also.
+++++++++++++++++++++++++++++++++++++++++++
+Bucket policys 
+Bucket policys : to permissions to the bucket level only.
+Select the bucket  --- > permissions ,we can see bucket policy.
+Bucket policy are written in jsoncode.
+Bucket policy should be definied in json code .
+It’s the job of AWS  administrator.
+++++++++++++++++++++++++++++++++++++++++
+LIFE CYCLE MANAGEMENT
+Lets create a new bucket .
+Select the bucket --- >management tab  --- > create a life cycle management rule.
+Rule name : myrule 
+This rule is applies to all objects ---- I acknowledge
+
+
+Taransit current version of objects between storage classes.
+Standard-IA    - 30 days
+Add Transition
+One zone -IA  ---60 days
+  I acknowledge
+Create a rule   
+
+Note : from now any object uploaded in the bucket will follow the rule for transition.
+++++++++++++++++++++++++++++++++++++
+
+
+
+  
+ 
+
+	
+ 
