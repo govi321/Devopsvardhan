@@ -1,0 +1,284 @@
+                    vpc peering
+
+
+Step 1 : create a vpc (Myvpc)  - 10.0.0.0/16
+Step2 : create two subnets
+
+Subnet1 –10.0.1.0/24
+Subnet1 –10.0.2.0/24
+Step 3:  Enable public ip to subnet1
+Step4: Create  internet gateway ,and attach to vpc  ---MYIGW
+Step5: Create Route table ---MYRT
+Step6: Attach Route table to subnet1
+Step7: Attach Route table to internet gateway
+Now,subnet1 is public.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Now let,s launch webserver in public subnet.(subnet1)
+Services --- > Ec2--- Launch instance ---step3 Network:  Myvpc
+                                                                                 Subnet:10.0.1.0/24   
+
+Additional Details –user data
+  #!/bin/bash
+  sudo su 
+  yum update –y
+  yum install httpd -y 
+  cd /var/www/html
+  echo “Google” > index.html
+  service httpd start
+  chkconfig httpd on
+Next --- Next ---Name tag –webserver --- > Next -- > security group : Websg18,
+Description --- > Websg18
+Add rule
+Type               Source
+Ssh                Anywhere
+http              Anywhere
+Launch the instance.
++++++++++++++++++++++++++++++++++++++++
+Lets launch the database server in private subnet.
+Services – Ec2 –Launch instance –step3 : Network : MYvpc
+                                                                         DbSubnet : 10.0.2.0/24
+Name tag :Dbserver –Next—securiyt group : Dbsg ,description : Dbsg
+Change the type from ssh to Mysql/Aurora
+Type                              source         
+Mysql/Aurora             custom      10.0.0.0/24 (web server subnet value)
+Keypair :DBsg.pem
+Review and Launch
+++++++++++++++++++++++++++++++++++++++++++++++++
+Now ,web server  can pull data from database server
++++++++++++++++++++++++++++++++++++++
+DBA wants to create some file . wants to perfome some maintenance activitys. Can he correct? 
+AS DB server is not having public ip and it is not having internet connectivity.DBA cannot connect.
+For this ,we need to create Bastion server / jump server in public subnet
+It is nothing but normal Ec2-machine
+
+Services –Ec2 –Launch –Amazon linux --- select Myvpc ---select subnet1(websubnet)
+(it means bastion server in public)
+ Name : Bastion server 
+Security group : Bastion-sg
+Description : Bastion sg
+(ssh port ------should be open to myself)
+Type                                           source
+Ssh                                               Myip   ( 157.47.124.46/32)
+Keypairname: Bationkey
+ Review and launch 
+Now only I can connect to bastion server  through  SSH
+From the bastion server ,I should  able to jump in to db server
+That means ,DB server SSH port should be open to bastion server .
+Go to DB server security group – DB sg (new tab)
+Select the DBSG  ---INBOUND ROULES ---  Edit—ADD rule
+Type                                      source      
+SSH                                        custom    10.0.1.53/32  (private ip of bastion server)
+Now let’s test can we connect  to DB server 
+In EC2-dash board --- select bastion server ---connect  with putty only.
+Then                        sudo su 
+                                Yum update -y
+Imp note : From bastion server ---we need to jump to DB server.
+Select DB server – connect 
+Copy the entire SSH command .
+As We are connecting to linux to linux .pem file is enough
+Enter the SSH command in putty .
+Eg .  # ssh –i “DBserver.pem”ec2-user@10.0.2.106
+Note : to connect the .pem file need to be present in present working directory.
+Now, we need to copy DBSERVER.pem file.
+It is there in our windows machine.
+We use WINSCP  to transfer the file from windows to linux.
+In Google serarch for  ‘’WINSCP’’
+Winscp.net
+Download and run 
+Open WINSCP
+We will connect to bastion server using WINSCP
+Host name :  user @ipaddress
+Ex: ec2-user@ 3.83.161.42
+Advanced  -- authentication  -- private keyfile   -- select the ppk file  0f(bastion server)  ---–open –ok –login
+Now,drag and drop the pem file of DB.PEM--- > to bastion server .
+In putty 
+# ls  (we should able to see the file )
+Now connect  to DB server by running the SSH command 
+#ssh- i “DBserver.pem”ec2-user@10.0.2.106
+You are now connected to DBserver!!!!!
+NOW ,IN db server ,lets execute the following commands.
+$ sudo su
+Now I want to upgrade the mysql data base 
+Command to upgrade mysql database
+Yum install mysql –y
+Not successful 
+We cannot install ,as we are not having internet connection to private subnet.
+To get internet connection ,we create NAT server.(Network  Address translator)
+The purpose of NAT is to provide internet to private subnet.
+We need to create NAT in public subnet.
+IN vpc dashboard
+NATGATEWAYs --- > Create NAT GATEWAY—name --MyNATGATE
+Subnet:10.0.1.0/24(public subnet)
+Create new EPI  (or) Allocate IP --- > create a NAT GATEWAY --- > close.
+NAT need 2 min approx. to get created.
++++++++++++++++++++++++++++++++++++
+What is Elastic ip?
+It is similar to public ip
+When we stop and start the Ec2 machines, public ip will change .
+If you start and stop the machine, you want the same public ip ,then we create a Elastic ip .
+Elastic ip is nothing but static public ip.
+Why do we need Elastic ip  to NAT.
+If incase NAT is down ,entire private subnet will not to get internet.
+Then we restart the NAT again,then it acquire new public ip
+When NAT acquire new public ip ,there could be connection issue.
+So we need Elastic ip to NAT
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NAT is a closed box .it does not have any ports concept.
+So ,no one can connect the NAT.
+We cannot connect NAT to private subnet directly.
+So ,we create Routetable.
+One end of Routetable is ,I connect to NAT.
+Another end of the Route table ,I connect to the private subnet.
+Instead of creating new route table,we can use default route table which was created vpc.
+Lets change the name of default route table to---- > NATROUTE
+OR Create a new route table
+Select the  NATROUTE -- > subnet association ---Edit subnet association –select private subnet or DB subnet--- save
+Select NATROUTE ---Routes---Edit routes  ---- Add route---Target : NATGATE WAY(select  NAT)
+Destination ---   0.0.0.0/0      NATGATE way ---save route – close.
+Now ,lets test are we able to get internet to our DBserver.
+Run the same command in putty again.
+# yum install mysql –y
+
+It works !!!!!
+Deletion process :
+Step1 : Delete NAT
+Step2 : Delete  EC2 Machine
+Step3: Delete vpc
+Step4: Release Elastic ip (select Elastic ip  from dashboard –action –Release Address0 ) 
+ 
+ Chapter 2: before going to create a NACL copy webserver ip & paste it in google.  “  Mygoogle  “    will found.
+Network ACL    (NACL)
+
+Security group will provide security at instance level   
+NACL will provide security at subnet level.
+Creating   NACL
+Select Network ACL ----- we have two default NACL
+One for default vpc ---
+One for my vpc  
+(so whenever we create new vpc ,by default NACL is created automatically)
+We will create  a new NACL  and attach to public subnet.
+Create Network ACL ---Name tag :public NACL
+Vpc : myvpc
+Create 
+Select the public NACL ---Subnet Association---Edit subnet association ---select public subnet(websubnet).
+Edit 
+
+Now try to access the webserver
+We cannot get web page!!!!!!
+We need to open ports at NACL
+Inbound rules---Edit inbound rules ---Add rule
+Rule#    type                   source
+ 100       ssh                      157.47.113.215/32  (my ip)
+200         HTTP                  0.0.0.0/0   htttp poen to all
+
+ Now try to access the webserver
+ We cannot get web page!!!!!!
+Lets select websecurity group ---inbound tab  ---edit
+Did we Add port in outbound tab ?
+In security group ,when we open inbound port ,by default outbound port is open to all.
+This status is called statefull.
+So,we have opened HTTP incoming, by default outbound port Is open to all.Hence we able to access the server .
+This status is called statefull.
+For NACL ,the case is different.
+We need to open outbound port NACL  explicitly.
+So, NACL is stateless.
+Select NACL   ---outbound Rules  -- Edit outbound Rules ---Add Rule
+Rule#        type                   source
+100           ssh                      157.47.113.215/32  (my ip)
+200           HTTP                   0.0.0.0/0   htttp poen to all
+Now,  can we able to  access webserver
+No!!!!!
+
+Ephemeral ports:
+Total Range of ports : 0 to  65535
+Range 1024 -65535 are the range of ephemeral
+Search in Google  “ephemeral ports in  AWS ”,we can see the   range
+Assume in public subnet ,we have 100 webserver 
+All are connected to load balancer .
+If hacker is  block any http port on 1 webserver 
+Will  it be a problem?
+No!!!
+As load balancer will send the request to other servers.
+If hacker blocks any http port on NACL level (subnet level)
+Entire website is down.
+To avoid  thois problem ,AWS is providing range of ports (1024-65535)
+We need to open this range in NACL level .
+So when hacker blocks a particular port (HTTP), AWS uses  a random port from the range 
+AWS will replace the random as HTTP port .
+So that website will never godown.
+Note : Ephermeral ports are mandatory at NACL level 
+Select  --- publicNACL  --Inbound --- Edit inbound rule ---Add rule
+
+Rule                   Type                               portRange
+300                     Custom tcp Rule             1024-65535
+Save.
+Now , can we able to access  webserver ?
+No !!!!
+NACL are stateless. We need to open ports in outbound level also.
+Select  --- publicNACL  --Inbound --- Edit inbound rule ---Add rule
+
+Rule                   Type                               portRange
+300                     Custom tcp Rule             1024-65535
+Save
+Now , can we able to access  webserver ?
+yes !!!!
+
+what is the use of NACL ?
+Rule                     type 
+200                       HTTP        (we have open to all)
+Add ONE MORE RULE
+Rule                     type               allow /deny
+201                       HTTP             Deny   
+Save.
+Similarly
+Select  our NACL -----outbound rues
+Rule                     type 
+200                       HTTP        (we have open to all)
+Add ONE MORE RULE
+Rule                     type               allow /deny
+201                       HTTP             Deny   
+Save.
+Now !! are we able to access the web server
+Yes!!!!
+Conclusion !Lowest rule# will have highest priority.
+Now,inbound rules
+Rule# ---201 change to 199
+Save.
+Now,outbound rules
+Rule# ---201 change to 199
+Save.
+Now ,Lowest rule is 199 which is deny
+So ,we connot access the web server
+
+Use causes:
+Hacker is continuously accessing the webserver .
+We want to black the his ip ,but the other customers should be able to accesss the webserver .
+ How can I do it .
+Lets Assume ,iam the hacker 
+Now ,in bound rules,change the source
+
+Rule#                                        source
+199                                           157.47.113.215/32
+(net work team will give us incoming request ip address)
+Similarly outbound rules also
+Now,are we able to access the webserver 
+No!!!(as it is blocked my machine)
+Imp usecauses: BY USING NACL ,WE CAN BLOCK SPECIFIC IP ADDRESS
+ NOW 
+Lets delete the rule#199 from inbond and outbound level
+  Now,are we able to access the webserver 
+   Yes !!! 
+NACL IS NOT RECOMMANDED  TO USE  FOR PRIVATE SUBNETS.
+
+Deletion process :
+Step1 : Delete NAT
+Step2 : Delete  EC2 Machine
+Step3: Delete vpc
+Step4: Release Elastic ip (select Elastic ip  from dashboard –action –Release Address0 ) 
+Step5: Delete  NACL
+
+
+ 
+
+ 
+ 
