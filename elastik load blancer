@@ -1,0 +1,54 @@
+                                               LOAD BALANCER
+      A Load blancer is accepts incoming traffic from clients and routes requests to Ec2-instance. (targets)
+      The load balancer also monitors the health of its registered targets and ensure that it route traffic only to health targets.
+      When the load balancer detects  an unhealthy targets , it stops routing  traffic to   target . it then resumes routing traffic to that target when it detects that the target is healthy again.
+Step :1 Create a linux machine
+Launch  instance --- amazon linux ---no.of instance -1 ----subnet –souteast-1a    –name tag -webserver-1 -----security group—mysecurity group
+Then open the two ports 
+1. ssh                        22                 anywere
+2. http                      80                anywere
+Then launch
+Step 2: Acces the machine
+Step 3: run the commands to install web package
+sudo –i
+yum update –y
+yum install httpd -y 
+cd /var/www/html
+echo “webserver-1” > index.html
+service httpd start
+chkconfig httpd on
+
+step 5: Access the webserver by using public ip or DNS
+step 6: launch one more linux machine and install web package
+Launch  instance --- amazon linux ---no of instance -1 ----subnet –souteast-1b    –name tag -webserver-2  -----security group—mysecurity group
+ ---step important : Advance details –user data
+  #!/bin/bash
+  sudo su 
+  yum update –y
+  yum install httpd -y 
+  cd /var/www/html
+  echo “webserver-2” > index.html
+  service httpd start
+  chkconfig httpd on
+
+  ls
+tags   –webserver-2  ---securitygroup----mysecuritygroup – it will open the ssh and http ports.
+Step 7 : Create a load blancer
+Selecte the classic load blancer
+     Loadblancer Name --- loadbalancer –next –LB INSIDE ---MYVPC-----select the subnets1a&1b exactly what we need,TARGET GROUP NAME--------Mytarget123-----selecte the  exisiting security group –next –step 4:
+Advance details :
+Response Time out  - 2 seconds
+Interval  -- 5 seconds
+Unhealthy threshold -2
+Healthy threshold -   2
+Next --- Attach the both subnets
+Next --- Attach the both instances
+Next  --- next   ---create 
+Step 8: lets verify the 2nd instance manually
+Select the public ip & paste in browser
+Step 9: Access the load blancer by using DNS
+Example: myload-1887706558.ap-southeast-1.elb.amazonaws.com
+And experience the load balancer.
+Step 10 : if one server is down,it should redirect the traffic to another server .
+1)	Then we can stop/terminate the machine
+2)	Remove the file / rename  the file
