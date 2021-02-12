@@ -1,7 +1,6 @@
                                       terraform using our own vpcs & subnets & ec2 instance
 
-                                        git clone terraform_pacticaks
- 
+                                        git clone  https://github.com/govi321/terraform_practicals.git
                                                 cd  vpc
 
                                                 ls -ltr
