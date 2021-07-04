@@ -76,14 +76,22 @@
        /etc/init.d/nexus restart
  
         sudo netstat -plnt
+        
  
+login as default username and passwd is  admin/admin123 then go to setting 
+-->go to repositiris --> create new repositorie
 
-login as default username and passwd is  admin/admin123 
+-->mavne2(hosted)  -->click it --> open the page.
+
+NAME  jmsth-spring 
+
+go down --> click create repository
+
  
 
 manage jenkins --manage plugins ---nexus platform --install --
 
-then go to ---configuration systems---dueto confugure the nexus
+then go to ---configuration systems---due to confugure the nexus
 
 
 Nexus Repository Manager Servers	
@@ -104,8 +112,9 @@ Nexus Repository Manager Servers
                                        NXRM OSS 3.29.1-01 found. Some operations require Nexus 
                                         Repository Manager Professional server version 3.13.0 or 
                                          newer; use of an incompatible server could result in failed builds   
-   then go to the job
-under  add build setep
+     then go to the your old job it means your tomcat deployed job
+under  add build setup
+
 
 Nexus Repository Manager Publisher
  	Nexus Instance	
