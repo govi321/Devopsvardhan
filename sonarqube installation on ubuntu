@@ -1,0 +1,233 @@
+                sonarqube installation on ubuntu
+
+sudo sysctl -w vm.max_map_count=262144
+
+sudo sysctl -w fs.file-max=65536
+
+ulimit -n 65536
+
+ulimit -u 4096
+
+sudo nano /etc/security/limits.conf
+
+####### end of below lines copy the two lines######
+
+sonarqube   -   nofile   65536
+sonarqube   -   nproc    4096
+
+
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt-get install wget unzip -y
+
+sudo apt-get install openjdk-11-jdk -y
+
+sudo apt-get install openjdk-11-jre -y
+
+java -version
+
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+
+then enter
+
+wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+
+sudo apt-get -y install postgresql postgresql-contrib
+
+sudo systemctl start postgresql
+
+sudo systemctl enable postgresql
+
+sudo passwd postgres
+
+passwd :postgres(set the passwd)
+
+su - postgres
+
+createuser sonar
+
+psql
+
+ALTER USER sonar WITH ENCRYPTED password 'sonar';
+
+CREATE DATABASE sonarqube OWNER sonar;
+
+grant all privileges on DATABASE sonarqube to sonar;
+
+\q
+
+exit
+
+cd /tmp
+
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.9.1.zip
+
+sudo unzip sonarqube-7.9.1.zip -d /opt
+
+sudo mv /opt/sonarqube-7.9.1 /opt/sonarqube
+
+sudo groupadd sonar
+
+sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
+
+sudo chown sonar:sonar /opt/sonarqube -R
+
+
+sudo nano /opt/sonarqube/conf/sonar.properties
+
+
+in this revome the # and add sonar like below
+
+sonar.jdbc.username=sonar
+sonar.jdbc.password=sonar
+
+
+sudo nano /opt/sonarqube/bin/linux-x86-64/sonar.sh
+
+in this revome the # and add sonar like below
+
+RUN_AS_USER=sonar
+
+
+sudo su sonar
+
+cd /opt/sonarqube/bin/linux-x86-64/
+
+./sonar.sh start
+
+./sonar.sh status
+
+tail /opt/sonarqube/logs/sonar.log
+
+sudo systemctl start sonar
+
+sudo systemctl enable sonar
+
+sudo systemctl status sonar
+
+then go to security group of perticular instance--edit inbound rules--then  add 
+
+custom tcp     ip -9000         anywhere
+
+                     save
+
+
+then go to sonarqube tab login with 
+
+                  admin
+
+                  admin
+
+then go administretor tab (or my account )
+go to security
+
+
+    Generate Tokens
+
+          Enter Token Name  jmsth20
+          
+                                     Generate 
+
+one token will be genrated  then copy that key and paste it somewhere for future purpose
+
+then go to adminstration --> security  -->one token willbe presence .
+
+then go to projects under (projects )--> managment-->we all are seee previous projects
+
+go to Administration > Configuration > General Settings > Security, and disable the Force user authentication property.
+
+put it is in  ON
+
+
+Then go to jenkins dash board-->manage jenkins --> manage plugin -->sonarQube scaner
+
+then go to jenkins dash board-->configure system --> 
+
+
+under 
+
+sonarQube server
+
+       sonar installation                        name                        sonar
+     
+                                                 server URL                 http://54.206.65.228:9000
+                                                
+                                                  server authentication     copy the genrated token
+
+                                                                    ADD credentials
+                                                              kind
+                                                                     secret text
+                                                                             secret
+                                                                                        past token here
+
+ 
+
+                                              APPLY & save it
+
+then go to Globaltool configuration-->under sonarQube scaner
+
+sonarScaner installation 
+                                   sonarqube scaner
+                                     name             sonarqubescaner
+
+                                      click install automatically
+
+                                       install from maven central
+                                         version sonarqubescaner 2.8
+
+                               apply & save
+
+go to jenkins dash board --> create one project--> freestyle -->
+go to in that job-->source code management--> 
+
+0 Git  
+
+            Repository  URL http://github/springpetclinc.git   
+
+            credentials githubcredentials
+
+BUILD 
+
+     invoke top level maven target
+
+Gols                        package
+
+BUILD
+
+    Excute sonarqubescaner
+Task to run 
+JDK                 java8
+path to project propertise
+
+Analysis propertise                          
+
+# Required metadata
+sonar.projectKey=java-sonar-runner-simple-jmsth20
+sonar.projectName=Simple Java project analyzed with the SonarQube Runner jmsth20
+sonar.projectVersion=1.0
+# Comma-separated paths to directories with sources (required)
+sonar.sources=src
+# Language
+sonar.language=java
+# Encoding of the source files
+sonar.sourceEncoding=UTF-8
+
+
+
+APPLY & SAVE 
+
+build now
+
+it take more time due to mavne project
+
+it success it will give a one URL like this http://localhost:9000/dashboard/index/java-sonar-runner-simple-jmsth20
+
+copy and paste it in other tab it will gives total information  
+
+in Global tool configuration 
+set JDK 
+                name java 
+                path /usr/lib/jvm/java-8-openjdk-amd64/ 
+
+                   
