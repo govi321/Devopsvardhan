@@ -334,9 +334,9 @@ first3 lettetrs owners,second 3letters group,next 3 lettrs others .
 
                            ./vardhan.sh bangalore raining							
 							  
-							  wether if it is " 0 "  success
+							  wether if it is " 0 "  means previous command is  "success"
 							  
-							  wether if it is " 1  " error will appear
+							  wether if it is " 1  " error will appear,it means previous command is "failure"
   
    
 	                     
