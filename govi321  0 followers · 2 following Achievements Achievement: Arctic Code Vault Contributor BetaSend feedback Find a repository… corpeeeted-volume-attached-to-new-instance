@@ -1,0 +1,433 @@
+[ec2-user@ip-172-31-15-52 ~]$ sudo -i
+[root@ip-172-31-15-52 ~]# lsblk
+NAME      MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+xvda      202:0    0   8G  0 disk
+├─xvda1   202:1    0   8G  0 part /
+├─xvda127 259:0    0   1M  0 part
+└─xvda128 259:1    0  10M  0 part /boot/efi
+xvdf      202:80   0   8G  0 disk
+├─xvdf1   202:81   0   8G  0 part
+├─xvdf127 259:2    0   1M  0 part
+└─xvdf128 259:3    0  10M  0 part
+[root@ip-172-31-15-52 ~]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+[root@ip-172-31-15-52 ~]#
+[root@ip-172-31-15-52 ~]# lsblk
+NAME      MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+xvda      202:0    0   8G  0 disk
+├─xvda1   202:1    0   8G  0 part /
+├─xvda127 259:0    0   1M  0 part
+└─xvda128 259:1    0  10M  0 part /boot/efi
+xvdf      202:80   0   8G  0 disk
+├─xvdf1   202:81   0   8G  0 part
+├─xvdf127 259:2    0   1M  0 part
+└─xvdf128 259:3    0  10M  0 part
+[root@ip-172-31-15-52 ~]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+[root@ip-172-31-15-52 ~]# file -s /dev/xvdf
+/dev/xvdf: DOS/MBR boot sector, extended partition table (last)
+[root@ip-172-31-15-52 ~]# mkdir /mnt/data
+[root@ip-172-31-15-52 ~]# l
+[root@ip-172-31-15-52 ~]# mount  /dev/xvdf1 /mnt/data/
+mount: /mnt/data: wrong fs type, bad option, bad superblock on /dev/xvdf1, missing codepage or helper program, or other error.
+[root@ip-172-31-15-52 ~]# cd /var/log/
+[root@ip-172-31-15-52 log]# ll
+total 1352
+lrwxrwxrwx. 1 root   root                39 Nov  1 22:43 README -> ../../usr/share/doc/systemd/README.logs
+drwxr-xr-x. 3 root   root                17 Nov  8 02:42 amazon
+drwx------. 2 root   root                23 Nov  8 02:42 audit
+-rw-rw----. 1 root   utmp                 0 Nov  1 22:43 btmp
+drwxr-x---. 2 chrony chrony              72 Nov  8 02:42 chrony
+-rw-r-----. 1 root   adm               3678 Nov  8 02:42 cloud-init-output.log
+-rw-r-----. 1 root   adm             149696 Nov  8 02:42 cloud-init.log
+-rw-r--r--. 1 root   root            860214 Nov  8 02:42 dnf.librepo.log
+-rw-r--r--. 1 root   root            264816 Nov  8 02:42 dnf.log
+-rw-r--r--. 1 root   root             82507 Nov  8 02:42 dnf.rpm.log
+-rw-r--r--. 1 root   root              2359 Nov  8 02:42 hawkey.log
+drwxr-sr-x+ 3 root   systemd-journal     46 Nov  8 02:42 journal
+-rw-rw-r--. 1 root   utmp            292292 Nov  8 02:43 lastlog
+drwx------. 2 root   root                 6 Nov  1 22:43 private
+drwxr-xr-x. 2 root   root                18 Nov  8 02:42 sa
+drwxr-x---. 2 root   root                73 Nov  8 02:42 sssd
+-rw-------. 1 root   root                 0 Nov  1 22:43 tallylog
+-rw-rw-r--. 1 root   utmp              2688 Nov  8 02:43 wtmp
+[root@ip-172-31-15-52 log]# cd
+[root@ip-172-31-15-52 ~]# cd /var/lo
+local/ lock/  log/
+[root@ip-172-31-15-52 ~]# cd /var/log/
+[root@ip-172-31-15-52 log]# ll
+total 1352
+lrwxrwxrwx. 1 root   root                39 Nov  1 22:43 README -> ../../usr/share/doc/systemd/README.logs
+drwxr-xr-x. 3 root   root                17 Nov  8 02:42 amazon
+drwx------. 2 root   root                23 Nov  8 02:42 audit
+-rw-rw----. 1 root   utmp                 0 Nov  1 22:43 btmp
+drwxr-x---. 2 chrony chrony              72 Nov  8 02:42 chrony
+-rw-r-----. 1 root   adm               3678 Nov  8 02:42 cloud-init-output.log
+-rw-r-----. 1 root   adm             149696 Nov  8 02:42 cloud-init.log
+-rw-r--r--. 1 root   root            860214 Nov  8 02:42 dnf.librepo.log
+-rw-r--r--. 1 root   root            264816 Nov  8 02:42 dnf.log
+-rw-r--r--. 1 root   root             82507 Nov  8 02:42 dnf.rpm.log
+-rw-r--r--. 1 root   root              2359 Nov  8 02:42 hawkey.log
+drwxr-sr-x+ 3 root   systemd-journal     46 Nov  8 02:42 journal
+-rw-rw-r--. 1 root   utmp            292292 Nov  8 02:43 lastlog
+drwx------. 2 root   root                 6 Nov  1 22:43 private
+drwxr-xr-x. 2 root   root                18 Nov  8 02:42 sa
+drwxr-x---. 2 root   root                73 Nov  8 02:42 sssd
+-rw-------. 1 root   root                 0 Nov  1 22:43 tallylog
+-rw-rw-r--. 1 root   utmp              2688 Nov  8 02:43 wtmp
+[root@ip-172-31-15-52 log]# tail -f messages
+tail: cannot open 'messages' for reading: No such file or directory
+tail: no files remaining
+[root@ip-172-31-15-52 log]# ls -la
+total 1368
+drwxr-xr-x.  9 root   root             16384 Nov  8 02:42 .
+drwxr-xr-x. 19 root   root               266 Nov  8 02:42 ..
+lrwxrwxrwx.  1 root   root                39 Nov  1 22:43 README -> ../../usr/share/doc/systemd/README.logs
+drwxr-xr-x.  3 root   root                17 Nov  8 02:42 amazon
+drwx------.  2 root   root                23 Nov  8 02:42 audit
+-rw-rw----.  1 root   utmp                 0 Nov  1 22:43 btmp
+drwxr-x---.  2 chrony chrony              72 Nov  8 02:42 chrony
+-rw-r-----.  1 root   adm               3678 Nov  8 02:42 cloud-init-output.log
+-rw-r-----.  1 root   adm             149696 Nov  8 02:42 cloud-init.log
+-rw-r--r--.  1 root   root            860214 Nov  8 02:42 dnf.librepo.log
+-rw-r--r--.  1 root   root            264816 Nov  8 02:42 dnf.log
+-rw-r--r--.  1 root   root             82507 Nov  8 02:42 dnf.rpm.log
+-rw-r--r--.  1 root   root              2359 Nov  8 02:42 hawkey.log
+drwxr-sr-x+  3 root   systemd-journal     46 Nov  8 02:42 journal
+-rw-rw-r--.  1 root   utmp            292292 Nov  8 02:43 lastlog
+drwx------.  2 root   root                 6 Nov  1 22:43 private
+drwxr-xr-x.  2 root   root                18 Nov  8 02:42 sa
+drwxr-x---.  2 root   root                73 Nov  8 02:42 sssd
+-rw-------.  1 root   root                 0 Nov  1 22:43 tallylog
+-rw-rw-r--.  1 root   utmp              2688 Nov  8 02:43 wtmp
+[root@ip-172-31-15-52 log]# tail -f Messages
+tail: cannot open 'Messages' for reading: No such file or directory
+tail: no files remaining
+[root@ip-172-31-15-52 log]# cd
+[root@ip-172-31-15-52 ~]# xfs_admin -U generate /dev/xvdf1
+Clearing log and setting UUID
+writing all SBs
+new UUID = 83418bd6-0c90-49e2-83d0-68e063ce4019
+[root@ip-172-31-15-52 ~]# mount /dev/xvdf1 /dev/data/
+mount: /dev/data/: mount point does not exist.
+[root@ip-172-31-15-52 ~]# mkdir /dev/data/
+[root@ip-172-31-15-52 ~]# mount /dev/xvdf1/ /dev/data/
+mount: /dev/data: special device /dev/xvdf1/ does not exist (a path prefix is not a directory).
+[root@ip-172-31-15-52 ~]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+[root@ip-172-31-15-52 ~]# ls blk
+ls: cannot access 'blk': No such file or directory
+[root@ip-172-31-15-52 ~]#
+[root@ip-172-31-15-52 ~]# lsblk
+NAME      MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+xvda      202:0    0   8G  0 disk
+├─xvda1   202:1    0   8G  0 part /
+├─xvda127 259:0    0   1M  0 part
+└─xvda128 259:1    0  10M  0 part /boot/efi
+xvdf      202:80   0   8G  0 disk
+├─xvdf1   202:81   0   8G  0 part
+├─xvdf127 259:2    0   1M  0 part
+└─xvdf128 259:3    0  10M  0 part
+[root@ip-172-31-15-52 ~]# mount /dev/xvdf/ /dev/data/
+mount: /dev/data: special device /dev/xvdf/ does not exist (a path prefix is not a directory).
+[root@ip-172-31-15-52 ~]# mount /dev/xvdf1/ /dev/data/
+mount: /dev/data: special device /dev/xvdf1/ does not exist (a path prefix is not a directory).
+[root@ip-172-31-15-52 ~]# mount /dev/xvdf1 /dev/data/
+[root@ip-172-31-15-52 ~]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+/dev/xvdf1      8.0G  1.5G  6.5G  19% /dev/data
+[root@ip-172-31-15-52 ~]# cd /mnt/data/
+[root@ip-172-31-15-52 data]# l
+-bash: l: command not found
+[root@ip-172-31-15-52 data]# ll
+total 0
+[root@ip-172-31-15-52 data]# mount /dev/xvdf1 /mnt/data/
+[root@ip-172-31-15-52 data]# ll
+total 0
+[root@ip-172-31-15-52 data]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+/dev/xvdf1      8.0G  1.5G  6.5G  19% /dev/data
+[root@ip-172-31-15-52 data]# umount /dev/xvdf1 /dev/data
+[root@ip-172-31-15-52 data]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+[root@ip-172-31-15-52 data]# mount /dev/xvdf1 /mnt/data/
+[root@ip-172-31-15-52 data]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+/dev/xvdf1      8.0G  1.5G  6.5G  19% /mnt/data
+[root@ip-172-31-15-52 data]# cd /mnt/data/
+[root@ip-172-31-15-52 data]# ll
+total 36
+lrwxrwxrwx.  1 root root     7 Jan 30  2023 bin -> usr/bin
+dr-xr-xr-x.  5 root root 16384 Nov  1 22:44 boot
+drwxr-xr-x.  3 root root   136 Nov  1 22:45 dev
+drwxr-xr-x. 78 root root 16384 Nov  8 02:31 etc
+drwxr-xr-x.  3 root root    22 Nov  8 01:57 home
+-rw-r--r--.  1 root root    19 Nov  8 01:57 index.html
+lrwxrwxrwx.  1 root root     7 Jan 30  2023 lib -> usr/lib
+lrwxrwxrwx.  1 root root     9 Jan 30  2023 lib64 -> usr/lib64
+drwxr-xr-x.  2 root root     6 Nov  1 22:42 local
+drwxr-xr-x.  2 root root     6 Jan 30  2023 media
+drwxr-xr-x.  2 root root     6 Jan 30  2023 mnt
+drwxr-xr-x.  3 root root    17 Nov  1 22:44 opt
+drwxr-xr-x.  2 root root     6 Nov  1 22:42 proc
+dr-xr-x---.  3 root root   140 Nov  8 02:32 root
+drwxr-xr-x.  2 root root     6 Nov  1 22:44 run
+lrwxrwxrwx.  1 root root     8 Jan 30  2023 sbin -> usr/sbin
+drwxr-xr-x.  2 root root     6 Jan 30  2023 srv
+drwxr-xr-x.  2 root root     6 Nov  1 22:42 sys
+drwxrwxrwt.  2 root root     6 Nov  1 22:42 tmp
+drwxr-xr-x. 12 root root   144 Nov  1 22:43 usr
+drwxr-xr-x. 20 root root   277 Nov  8 02:01 var
+[root@ip-172-31-15-52 data]# cd /etc/
+[root@ip-172-31-15-52 etc]# ll
+total 1124
+-rw-r--r--.  1 root root     4673 Feb 17  2023 DIR_COLORS
+-rw-r--r--.  1 root root     4755 Feb 17  2023 DIR_COLORS.lightbgcolor
+-rw-r--r--.  1 root root       94 Jan 30  2023 GREP_COLORS
+drwxr-xr-x.  3 root root       26 Nov  1 22:44 NetworkManager
+drwxr-xr-x.  6 root root       70 Nov  1 22:43 X11
+drwxr-xr-x.  4 root root       35 Nov  1 22:43 acpi
+-rw-r--r--.  1 root root       16 Nov  1 22:44 adjtime
+-rw-r--r--.  1 root root     1529 Jun 23  2020 aliases
+drwxr-xr-x.  2 root root      213 Nov  1 22:44 alternatives
+drwxr-xr-x.  3 root root       17 Nov  1 22:44 amazon
+lrwxrwxrwx.  1 root root       25 Oct 30 17:02 amazon-linux-release -> ../usr/lib/system-release
+lrwxrwxrwx.  1 root root       29 Oct 30 17:02 amazon-linux-release-cpe -> ../usr/lib/system-release-cpe
+-rw-r--r--.  1 root root        1 Jan 30  2023 at.deny
+drwxr-x---.  4 root root      100 Nov  8 02:42 audit
+drwxr-xr-x.  2 root root       30 Nov  1 22:44 bash_completion.d
+-rw-r--r--.  1 root root     3019 Jun 23  2020 bashrc
+-rw-r--r--.  1 root root      535 Feb  2  2023 bindresvport.blacklist
+drwxr-xr-x.  2 root root        6 Sep 12 19:44 binfmt.d
+drwxr-xr-x.  2 root root        6 Jan 29  2023 chkconfig.d
+-rw-r--r--.  1 root root     1425 Jun  5 10:15 chrony.conf
+drwxr-xr-x.  2 root root       20 Nov  1 22:43 chrony.d
+-rw-r-----.  1 root chrony    540 Aug 29  2022 chrony.keys
+drwxr-xr-x.  2 root root       26 Nov  1 22:43 cifs-utils
+drwxr-xr-x.  4 root root       59 Nov  1 22:44 cloud
+drwxr-xr-x.  2 root root        6 Jan 30  2023 cron.daily
+drwxr-xr-x.  2 root root        6 Jan 30  2023 cron.hourly
+drwxr-xr-x.  2 root root        6 Jan 30  2023 cron.monthly
+drwxr-xr-x.  2 root root        6 Jan 30  2023 cron.weekly
+-rw-r--r--.  1 root root      451 Jan 30  2023 crontab
+drwxr-xr-x.  6 root root       81 Nov  1 22:43 crypto-policies
+-rw-r--r--.  1 root root     1657 Jun 23  2020 csh.cshrc
+-rw-r--r--.  1 root root     1093 Jun 23  2020 csh.login
+drwxr-xr-x.  4 root root       78 Nov  1 22:43 dbus-1
+drwxr-xr-x.  2 root root       33 Nov  1 22:44 default
+drwxr-xr-x.  2 root root        6 Jan 31  2023 depmod.d
+drwxr-xr-x.  3 root root       56 Nov  1 22:44 dhcp
+drwxr-xr-x.  8 root root      128 Nov  1 22:43 dnf
+-rw-r--r--.  1 root root      117 Jul  6 20:21 dracut.conf
+drwxr-xr-x.  2 root root       22 Nov  1 22:44 dracut.conf.d
+-rw-r--r--.  1 root root        0 Jan 30  2023 environment
+-rw-r--r--.  1 root root     1362 Jun 23  2020 ethertypes
+-rw-r--r--.  1 root root        0 Jun 23  2020 exports
+drwxr-xr-x.  2 root root        6 Feb  1  2023 exports.d
+-rw-r--r--.  1 root root       66 Jun 23  2020 filesystems
+-rw-r--r--.  1 root root      217 Nov  1 22:45 fstab
+drwxr-xr-x.  2 root root        6 Sep 12 22:12 gcrypt
+drwxr-xr-x.  2 root root        6 Nov  1 22:43 gnupg
+drwxr-xr-x.  4 root root       40 Nov  1 22:43 groff
+-rw-r--r--.  1 root root      713 Nov  8 02:42 group
+-rw-r--r--.  1 root root      672 Nov  1 22:44 group-
+drwx------.  2 root root      253 Nov  1 22:43 grub.d
+lrwxrwxrwx.  1 root root       22 Oct 23 10:57 grub2-efi.cfg -> ../boot/grub2/grub.cfg
+lrwxrwxrwx.  1 root root       22 Oct 23 10:57 grub2.cfg -> ../boot/grub2/grub.cfg
+----------.  1 root root      591 Nov  8 02:42 gshadow
+----------.  1 root root      554 Nov  1 22:44 gshadow-
+drwxr-xr-x.  3 root root       20 Nov  1 22:43 gss
+drwxr-xr-x.  2 root root       79 Nov  1 22:44 gssproxy
+-rw-r--r--.  1 root root      801 Jul 23  2022 hibinit-config.cfg
+-rw-r--r--.  1 root root        9 Jun 23  2020 host.conf
+-rw-r--r--.  1 root root       44 Nov  8 02:42 hostname
+-rw-r--r--.  1 root root      126 Nov  1 22:44 hosts
+-rw-r--r--.  1 root root     5799 Feb  1  2023 idmapd.conf
+-rw-r--r--.  1 root root      270 Nov  1 22:45 image-id
+lrwxrwxrwx.  1 root root       11 Jan 31  2023 init.d -> rc.d/init.d
+-rw-r--r--.  1 root root      490 Sep 12 19:44 inittab
+-rw-r--r--.  1 root root      943 Jun 23  2020 inputrc
+drwxr-xr-x.  2 root root      159 Nov  1 22:43 iproute2
+lrwxrwxrwx.  1 root root       16 Oct 30 17:02 issue -> ../usr/lib/issue
+lrwxrwxrwx.  1 root root       20 Oct 30 17:02 issue.net -> ../usr/lib/issue.net
+drwxr-xr-x.  3 root root       38 Nov  1 22:45 kernel
+drwxr-xr-x.  2 root root        6 Mar  6  2023 keyutils
+-rw-r--r--.  1 root root      880 Aug 30 22:36 krb5.conf
+drwxr-xr-x.  2 root root       55 Nov  1 22:44 krb5.conf.d
+-rw-r--r--.  1 root root    13799 Nov  1 22:44 ld.so.cache
+-rw-r--r--.  1 root root       28 Oct 23 22:29 ld.so.conf
+drwxr-xr-x.  2 root root       33 Nov  1 22:43 ld.so.conf.d
+-rw-r-----.  1 root root      191 Oct  1  2021 libaudit.conf
+drwxr-xr-x.  2 root root    16384 Nov  1 22:43 libibverbs.d
+drwxr-xr-x.  2 root root       35 Nov  1 22:43 libnl
+drwxr-xr-x.  6 root root       70 Nov  1 22:43 libreport
+-rw-r--r--.  1 root root     2391 Mar  1  2021 libuser.conf
+-rw-r--r--.  1 root root       79 Nov  8 02:42 locale.conf
+-rw-r--r--.  1 root root      114 Nov  1 22:44 localtime
+-rw-r--r--.  1 root root     8402 Feb  3  2023 login.defs
+-rw-r--r--.  1 root root      493 Apr 16  2021 logrotate.conf
+drwxr-xr-x.  2 root root       81 Nov  1 22:44 logrotate.d
+drwxr-xr-x.  3 root root       43 Nov  1 22:43 lsm
+-r--r--r--.  1 root root       33 Nov  8 02:42 machine-id
+-rw-r--r--.  1 root root      111 Aug 30 20:17 magic
+-rw-r--r--.  1 root root     5235 Feb  1  2023 man_db.conf
+-rw-r--r--.  1 root root      782 Jan 30  2023 mke2fs.conf
+drwxr-xr-x.  2 root root       24 Nov  1 22:44 modprobe.d
+drwxr-xr-x.  2 root root        6 Sep 12 19:44 modules-load.d
+lrwxrwxrwx.  1 root root       25 Nov  1 22:44 motd -> /var/lib/update-motd/motd
+drwxr-xr-x.  2 root root        6 Jan 30  2023 motd.d
+lrwxrwxrwx.  1 root root       19 Nov  1 22:43 mtab -> ../proc/self/mounts
+-rw-r--r--.  1 root root    10695 Feb  1  2023 nanorc
+-rw-r--r--.  1 root root      767 Feb  2  2023 netconfig
+-rw-r--r--.  1 root root       58 Jun 23  2020 networks
+-rw-r--r--.  1 root root     1439 Feb  1  2023 nfs.conf
+-rw-r--r--.  1 root root     3606 Feb  1  2023 nfsmount.conf
+-rw-r--r--.  1 root root     2108 Oct 23 22:52 nsswitch.conf
+drwxr-xr-x.  3 root root       36 Nov  1 22:43 openldap
+drwxr-xr-x.  2 root root        6 Jan 30  2023 opt
+lrwxrwxrwx.  1 root root       21 Oct 30 17:02 os-release -> ../usr/lib/os-release
+drwxr-xr-x.  2 root root    16384 Nov  1 22:44 pam.d
+-rw-r--r--.  1 root root     1436 Nov  8 02:42 passwd
+-rw-r--r--.  1 root root     1436 Nov  8 02:42 passwd-
+drwxr-xr-x.  3 root root       21 Nov  1 22:43 pkcs11
+drwxr-xr-x.  3 root root       27 Nov  1 22:44 pkgconfig
+drwxr-xr-x.  7 root root       73 Nov  1 22:43 pki
+drwxr-xr-x.  5 root root       52 Nov  1 22:43 pm
+drwxr-xr-x.  2 root root        6 Jan 29  2023 popt.d
+-rw-r--r--.  1 root root      233 Jun 23  2020 printcap
+-rw-r--r--.  1 root root     1816 Jun 23  2020 profile
+drwxr-xr-x.  2 root root    16384 Nov  1 22:44 profile.d
+-rw-r--r--.  1 root root     6568 Jun 23  2020 protocols
+drwxr-xr-x. 10 root root      111 Jan 29  2023 rc.d
+lrwxrwxrwx.  1 root root       10 Jan 31  2023 rc0.d -> rc.d/rc0.d
+lrwxrwxrwx.  1 root root       10 Jan 31  2023 rc1.d -> rc.d/rc1.d
+lrwxrwxrwx.  1 root root       10 Jan 31  2023 rc2.d -> rc.d/rc2.d
+lrwxrwxrwx.  1 root root       10 Jan 31  2023 rc3.d -> rc.d/rc3.d
+lrwxrwxrwx.  1 root root       10 Jan 31  2023 rc4.d -> rc.d/rc4.d
+lrwxrwxrwx.  1 root root       10 Jan 31  2023 rc5.d -> rc.d/rc5.d
+lrwxrwxrwx.  1 root root       10 Jan 31  2023 rc6.d -> rc.d/rc6.d
+-rw-r--r--.  1 root root     1787 Mar  6  2023 request-key.conf
+drwxr-xr-x.  2 root root       30 Nov  1 22:44 request-key.d
+lrwxrwxrwx.  1 root root       32 Nov  1 22:44 resolv.conf -> /run/systemd/resolve/resolv.conf
+-rw-r--r--.  1 root root     1634 Aug  2  2021 rpc
+drwxr-xr-x.  2 root root        6 Apr 17  2023 rpm
+-rw-r--r--.  1 root root      458 Feb  2  2023 rsyncd.conf
+drwxr-xr-x.  2 root root       31 Nov  1 22:44 rsyslog.d
+drwxr-xr-x.  2 root root       51 Nov  1 22:43 rwtab.d
+drwxr-xr-x.  2 root root        6 Jan 30  2023 sasl2
+-rw-r--r--.  1 root root     6720 Jun  8 20:46 screenrc
+drwxr-xr-x.  7 root root    16384 Nov  1 22:43 security
+drwxr-xr-x.  3 root root       57 Nov  1 22:44 selinux
+-rw-r--r--.  1 root root   692252 Jun 23  2020 services
+-rw-r--r--.  1 root root      216 Feb  1  2023 sestatus.conf
+----------.  1 root root      728 Nov  8 02:42 shadow
+----------.  1 root root      728 Nov  8 02:42 shadow-
+-rw-r--r--.  1 root root       90 Nov  1 22:44 shells
+drwxr-xr-x.  2 root root       62 Nov  1 22:43 skel
+drwxr-xr-x.  4 root root      214 Nov  8 02:42 ssh
+drwxr-xr-x.  2 root root       91 Nov  1 22:43 ssl
+drwx------.  4 root root       31 Nov  1 22:43 sssd
+drwxr-xr-x.  2 root root        6 Jan 30  2023 statetab.d
+-rw-r--r--.  1 root root       22 Nov  8 02:42 subgid
+-rw-r--r--.  1 root root        0 Jun 23  2020 subgid-
+-rw-r--r--.  1 root root       22 Nov  8 02:42 subuid
+-rw-r--r--.  1 root root        0 Jun 23  2020 subuid-
+-rw-r-----.  1 root root     4316 Sep  6 21:04 sudo.conf
+-r--r-----.  1 root root     4375 Sep  6 21:01 sudoers
+drwxr-x---.  2 root root       33 Nov  8 02:42 sudoers.d
+drwxr-xr-x.  5 root root    16384 Nov  1 22:44 sysconfig
+-rw-r--r--.  1 root root      449 Sep 12 19:44 sysctl.conf
+drwxr-xr-x.  2 root root       52 Nov  1 22:44 sysctl.d
+lrwxrwxrwx.  1 root root       25 Oct 30 17:02 system-release -> ../usr/lib/system-release
+lrwxrwxrwx.  1 root root       29 Oct 30 17:02 system-release-cpe -> ../usr/lib/system-release-cpe
+drwxr-xr-x.  6 root root    16384 Nov  1 22:44 systemd
+drwxr-xr-x.  2 root root        6 Jun  8 20:21 terminfo
+drwxr-xr-x.  2 root root        6 Sep 12 19:44 tmpfiles.d
+-rw-r--r--.  1 root root      375 Sep 22 20:11 trusted-key.key
+drwxr-xr-x.  4 root root       68 Nov  1 22:44 udev
+drwxr-xr-x.  2 root root       34 Aug 18 16:19 update-motd.d
+-rw-r--r--.  1 root root     4017 Oct 17 23:37 vimrc
+-rw-r--r--.  1 root root     1183 Oct 17 23:37 virc
+-rw-r--r--.  1 root root     4925 Jun  5 12:48 wgetrc
+-rw-r--r--.  1 root root      817 Jan 29  2023 xattr.conf
+drwxr-xr-x.  4 root root       38 Nov  1 22:43 xdg
+drwxr-xr-x.  2 root root       59 Oct 30 17:02 yum.repos.d
+[root@ip-172-31-15-52 etc]# vi fstab
+[root@ip-172-31-15-52 etc]# cat /etc/fstab
+#
+UUID=3f35b7b7-3b0c-4802-85f2-d1e990bef1d5     /           xfs    defaults,noatime  1   1
+UUID=452A-C785        /boot/efi       vfat    defaults,noatime,uid=0,gid=0,umask=0077,shortname=winnt,x-systemd.automount 0 2
+[root@ip-172-31-15-52 etc]# lsblk
+NAME      MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+xvda      202:0    0   8G  0 disk
+├─xvda1   202:1    0   8G  0 part /
+├─xvda127 259:0    0   1M  0 part
+└─xvda128 259:1    0  10M  0 part /boot/efi
+xvdf      202:80   0   8G  0 disk
+├─xvdf1   202:81   0   8G  0 part /mnt/data
+├─xvdf127 259:2    0   1M  0 part
+└─xvdf128 259:3    0  10M  0 part
+[root@ip-172-31-15-52 etc]# blkid /dev/xvdf1
+/dev/xvdf1: LABEL="/" UUID="83418bd6-0c90-49e2-83d0-68e063ce4019" BLOCK_SIZE="4096" TYPE="xfs" PARTLABEL="Linux" PARTUUID="7f82f75f-8c52-4607-8f7d-f2f8141ca269"
+[root@ip-172-31-15-52 etc]# vi fstab
+[root@ip-172-31-15-52 etc]# vi fstab
+[root@ip-172-31-15-52 etc]# cd
+[root@ip-172-31-15-52 ~]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        4.0M     0  4.0M   0% /dev
+tmpfs           475M     0  475M   0% /dev/shm
+tmpfs           190M  2.9M  188M   2% /run
+/dev/xvda1      8.0G  1.5G  6.5G  19% /
+tmpfs           475M     0  475M   0% /tmp
+/dev/xvda128     10M  1.3M  8.7M  13% /boot/efi
+tmpfs            95M     0   95M   0% /run/user/1000
+[root@ip-172-31-15-52 ~]#
