@@ -1,0 +1,23 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "smt230848482920834",
+            "Action": [
+                "*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Deny",
+            "Action": [
+                "Iam:*",
+                "s3:*"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "VisualEditor0",
+			"Effect": "Allow",
+			"Action": "ec2:DescribeInstances",
+			"Resource": "*"
+		},
+		{
+			"Sid": "VisualEditor1",
+			"Effect": "Allow",
+			"Action": [
+				"ec2:StartInstances",
+				"ec2:StopInstances",
+				"ec2:RebootInstances"
+			],
+			"Resource": [
+				"arn:aws:ec2:ap-southeast-1:335560756770:instance/i-02fd429ff0d7a4fb2",
+				"arn:aws:ec2:ap-southeast-1:335560756770:instance/i-0c5872e2fd3e6b142"
+			]
+		}
+	]
+}
