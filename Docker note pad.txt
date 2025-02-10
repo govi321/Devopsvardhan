@@ -1,0 +1,1167 @@
+Day Wise Commands ==> Feb14 
+# commands
+Docker install command
+
+# sudo apt-get docker.io *
+
+
+docker pull  --- Image pull down
+docker rmi <Imagename> ==> to delete the image
+docker inspect <Imagename> ==> to verify the image content
+docker inspect histroy <imagename> ==> to know the layers histroy
+
+# docker images -f dangling=true ==> to know the dangling images
+# docker images --filter "dangling=true" ==> to know the dangling images
+
+# docker image prune ==> to delete the dangling images
+
+# docker image prune -a ==> to delete unused images ( which are not associated to container)
+
+docker create  ==> container will create
+docker start <containerID/Name>  ==> to start container
+docker stop <containerID/Name>  ==> to stop the container
+  (or)
+docker kill <containerID/Name>
+
+docker rm <containerID/Name> ==> to delete the container
+
+FEB15
+Container operations
+first use case ==> create container without name
+
+# docker pull httpd
+# docker create <imagename>
+it will create container with random name and ID
+
+Second Use case ==> creating a container from an image with custom name
+
+docker create --name web01 httpd
+docker ps -a
+docker start web01
+docker ps -a
+docker stop web01
+
+Third use case ==> creating a container without foreground process, which is exiting(stop) automatically
+docker pull centos
+docker create --name srv01 centos
+docker ps -a
+docker start srv01
+docker ps -a
+docker image inspect centos
+
+Fourth use case ==> creating a container without foreground process==> but bringing to foreground process
+
+#docker create --name srv02 -it centos 
+docker ps -a
+docker start srv02
+docker ps -a ( srv02 will be in running status)
+
+
+# fifth use case ==> 
+
+to login into the container , you have two method ==> "docker attach", "docker exec"
+
+# docker attach srv02
+
+Sixth use case ==> combining all commands using " RUN "
+
+docker create
+docker start
+docker attach
+docker stop
+
+# docker run <imagename>
+example: docker run httpd
+
+
+# seventh use case ==> Running container using docker run without existing
+-d < detach mode>
+
+# docker run -d --name web03 httpd
+
+# eight use case ==> Running container using docker run without foreground process
+
+- docker run --name srv03 centos
+
+
+# nineth use case ==> lets bring container in running state by using "docker run" command
+
+- docker run -t -d --name srv04 centos
+
+tenth use case: assigning logout with keys by using --detach-keys without stopping container
+
+
+
+FEB-16
+
+container limitis
+
+docker pull centos
+
+docker create --name srv01 -it centos
+
+docker ps -a
+
+docker start srv01
+
+docker attach srv01
+
+top
+
+######then dupicate the session 
+
+sudo su 
+docker images
+
+docker attch srv01
+
+top
+
+exit 
+
+docker top srvo1
+
+#####container is running top commnd will work, if it is in stop mode top command is notwork
+
+docker start srv01
+
+docker ps -a 
+
+docker exec -it srv01 /bin/bash
+
+docker top srv01 (in other server)
+
+then exit frm the container 
+then apply again 
+
+docker top srv01 (in other server)
+it will work 
+
+docker ps -a 
+
+container is running
+
+docker stats   (it will show the container limit)
+
+take a 2 bg sever for better understand
+
+apt install docker.io
+
+docker pull centos
+
+docker create --name srv01 -it centos
+docker ps -a
+
+docker start srv01
+
+docker stats srv01
+
+take theh duplicate session 
+
+sudo su 
+
+docker run -dit --name srv02 centos
+
+docker stats srv02
+
+it wil take total resource of the or size of the server
+
+thats way we have to apply size limit
+
+docker run -t -d --memory='1g' --name srv03 centos 
+
+example:
+docker run -t -d --memory='500mb' --name srv03 centos
+
+check in duplicate session
+
+then allocate the cpu 
+
+docker run -t -d --cpu-shares="500" --memory='2g' --name srv04 centos
+
+example:
+
+docker run -t -d --cpus=".5" --memory='500mb' --name srv04 centos
+
+
+delete containers
+
+allocate the ports
+
+docker images
+ centos available 
+ 
+ docker run -d --name httpd01 -p8080:80 httpd
+ 
+ 
+ docker run -d --name nginx01 -p 8081:80 nginx
+
+
+docker ps -a 
+
+take  the public ip :8080
+
+it will show it's work
+
+
+tak ethe public ip :8081
+it will show the nginx
+
+
+FEB-17
+
+----------------Network ------------
+Bridge--
+Host----
+overlay---
+None----
+macvlan---
+
+docker network ls
+
+NETWORK ID     NAME      DRIVER    SCOPE
+593ff12b9bf7   bridge    bridge    local
+b87e247225c7   host      host      local
+e178eb35ff3f   none      null      local
+
+docker run -d --name httpd01 -p8080:80 httpd
+
+
+docker run -d --name nginx01 -p8081:80 nginx
+
+take the public ip :8080
+
+it will show it's work
+
+
+take   the public ip :8081
+it will show the nginx
+
+
+then 
+
+docker network ls
+
+NETWORK ID     NAME      DRIVER    SCOPE
+593ff12b9bf7   bridge    bridge    local
+b87e247225c7   host      host      local
+e178eb35ff3f   none      null      local
+Bridge--
+host 
+none
+
+ifconfig
+
+apt install net-tool
+
+eth0:
+docker container ip
+
+
+docker inspect httpd01
+
+find networks
+           bridge
+		   ipAddress
+
+
+docker inspect nginx01
+
+find networks
+           bridge
+		   ipAddress
+
+
+docker network ls
+
+docker network inspect bridge
+
+-----------------communication between two containers------------
+
+docker run -dit --name srv01 centos
+
+
+docker run -dit --name srv02 centos
+
+
+docker network inspect bridge
+
+
+docker exec -it srv01 ping srv02
+
+
+docker exec -it srv02 ping srv01
+
+for using the ip's it self valiadate it 
+
+docker exec -it srv02 ping srv01/ip (172.17.0.4)
+
+root@ip-172-31-30-217:~# docker exec -it srv02 ping 172.17.0.4
+PING 172.17.0.4 (172.17.0.4) 56(84) bytes of data.
+64 bytes from 172.17.0.4: icmp_seq=1 ttl=64 time=0.100 ms
+64 bytes from 172.17.0.4: icmp_seq=2 ttl=64 time=0.062 ms
+64 bytes from 172.17.0.4: icmp_seq=3 ttl=64 time=0.063 ms
+
+
+
+docker exec -it srv01 ping srv02/ip (172.17.0.3)
+
+root@ip-172-31-30-217:~# docker exec -it srv01 ping 172.17.0.5
+PING 172.17.0.5 (172.17.0.5) 56(84) bytes of data.
+64 bytes from 172.17.0.5: icmp_seq=1 ttl=64 time=0.072 ms
+64 bytes from 172.17.0.5: icmp_seq=2 ttl=64 time=0.066 ms
+
+that's way we are creating our own bridge network
+
+docker network ls
+
+---------to create our own bridge network--------------
+
+
+
+docker network create my_bridge1 --driver bridge
+
+example 
+
+docker network create -d bridge my_bridge1
+
+
+docker network ls
+
+docker network inspect my_bridge1
+
+docker network ls
+
+docker run -dit --name srv03 --network=my_bridge1 centos 
+
+
+docker run -dit --name srv04 --network=my_bridge1 centos
+
+
+docker network inspect my_bridge1
+
+
+
+docker exec -it  srv03 ping srv04
+
+root@ip-172-31-30-217:~# docker exec -it srv03 ping srv04
+PING srv04 (172.18.0.3) 56(84) bytes of data.
+64 bytes from srv04.my_bridge1 (172.18.0.3): icmp_seq=1 ttl=64 time=0.108 ms
+64 bytes from srv04.my_bridge1 (172.18.0.3): icmp_seq=2 ttl=64 time=0.076 ms
+
+
+it wil ping because of it under same bridge network
+
+
+--------create another bridge network ------------------
+
+
+docker network create my_bridge2 --drive bridge
+
+docker network create -d bridge my_bridge1
+
+
+docker network ls
+
+docker network inspect my_bridge2
+
+docker network ls
+
+docker run -dit --name srv05 --network=my_bridge2 centos 
+
+
+docker run -dit --name srv06 --network=my_bridge2 centos
+
+
+docker exec -it srv05 ping srv03
+
+it won't connect (no connection established)
+
+root@ip-172-31-30-217:~# docker exec -it srv-05 ping srv03
+ping: srv03: Name or service not known
+root@ip-172-31-30-217:~# docker exec -it srv-05 ping 172.18.0.2
+PING 172.18.0.2 (172.18.0.2) 56(84) bytes of data.
+
+-----so need to compromise the linux  firewall-----
+
+iptables -L
+
+iptables -I FORWARD -s 172.20.0.3/16 -d 172.19.0.3/16 -j ACCEPT 
+   
+iptables -I FORWARD -s 172.19.0.3/16 -d 172.20.0.3/16 -j ACCEPT
+
+iptables -L
+
+docker exec -it srv05 ping srv03
+
+root@ip-172-31-30-217:~# docker exec -it srv-05 ping 172.18.0.2
+PING 172.18.0.2 (172.18.0.2) 56(84) bytes of data.
+64 bytes from 172.18.0.2: icmp_seq=1 ttl=63 time=0.130 ms
+64 bytes from 172.18.0.2: icmp_seq=2 ttl=63 time=0.075 ms
+             or
+			 
+docker exec -it srv03 ping srv05 (ip)
+root@ip-172-31-30-217:~# docker exec -it srv03 ping 172.20.0.2
+PING 172.20.0.2 (172.20.0.2) 56(84) bytes of data.
+64 bytes from 172.20.0.2: icmp_seq=1 ttl=63 time=0.088 ms
+64 bytes from 172.20.0.2: icmp_seq=2 ttl=63 time=0.068 ms
+
+docker exec -it srv04 ping srv06 (ip
+
+root@ip-172-31-30-217:~# docker exec -it srv04 ping 172.20.0.3
+PING 172.20.0.3 (172.20.0.3) 56(84) bytes of data.
+64 bytes from 172.20.0.3: icmp_seq=1 ttl=63 time=0.131 ms
+64 bytes from 172.20.0.3: icmp_seq=2 ttl=63 time=0.069 ms			 
+ 
+ 
+ docker exec -it srv06 ping srv04 (ip)
+ 
+ root@ip-172-31-30-217:~# docker exec -it srv-06 ping 172.18.0.3
+PING 172.18.0.3 (172.18.0.3) 56(84) bytes of data.
+64 bytes from 172.18.0.3: icmp_seq=1 ttl=63 time=0.085 ms
+ 
+ 
+ 
+ clean up  everthing
+ 
+ ---------------------HOst NETWORK-----------
+ 
+ 
+ docker network inspect host
+ 
+ if i can see there is no ip in this host network 
+ 
+ docker run -dit --name httpd01 --network=host -p8080:80 httpd 
+ 
+ take the pulic ip hit in browser
+ 
+ it's work
+ 
+ docker run -dit --name nginx01 --network=host -p8080:80 nginx
+ 
+ docker ps -a 
+ 
+ nginx container would be stoped cause in host network we cann't run the two containers at a time and 
+ 
+ httpd it runinng on foreground only
+ 
+ then stop the httpd01 container
+ 
+ docker stop httpd01
+ 
+ docker start nginx01
+ then refresh the browser 
+ nginx will apppear 
+ 
+ -------------volumes---------------
+ 
+ docker ps -a 
+ 
+ docker run -dit --name srv01 centos
+ docker exec -it srv01 /bin/bash
+ ls
+ mkdir krishna
+ 
+ cd krishna
+ touch krish.txt
+ ls
+ exit
+ 
+docker ps -a 
+
+
+docker stop srv01
+
+docker ps -a 
+
+docker start srv01
+docker exec -it srv01 /bin/bash
+
+ls
+
+my data is presence
+
+exit
+docker stop srv01
+docker rm srv01
+docker ps -a 
+
+then we can create same container like previous
+
+docker run -dit --name srv01 centos
+ docker exec -it srv01 /bin/bash
+ ls
+ 
+ my previous data is not presence
+ 
+ exit
+ 
+ clear 
+ 
+ docker volume create testvol1
+ 
+ docker volume ls 
+ 
+ docker volume inspect testvol1
+ 
+ it is stored on one path
+ /var/lib/docker/volumes/testvol1/_data
+ 
+ 
+ cd /var/lib/docker/volumes
+ 
+ ls 
+ 
+ cd testvol1
+ 
+ ls
+ _data
+ 
+ cd 
+ then create container with attch volume
+ 
+ docker run -dit --name srv02 --mount source=testvol1,destination=/data centos
+ 
+ 
+ docker exec -it srv02 /bin/bash
+ 
+ ls
+ 
+ cd data
+ 
+ ls
+ 
+ touch krishna1.txt
+ touch krishna.txt
+ exit
+ 
+ docker volume inspect testvol1
+ 
+ cd /var/lib/docker/volumes/testvol1
+ 
+ ls
+ cd _data
+ 
+ ls  
+ my data will presence
+ 
+ 
+ cd
+ 
+ 
+ docker run -dit --name srv03 -v testvol1:/data centos
+ 
+ docker exec -it srv0 /bin/bash
+ 
+ cd data
+ ls 
+ 
+ data will presence here
+
+ 
+ FEB-19
+ 
+ ----------------image creation---------------------
+ manual method 
+ automated method
+ 
+ docker pull centos
+ 
+ docker run -dit --name srv01 centos
+ 
+ docker ps -a	
+ 
+ docker exec -it srv01 /bin/bash
+ 
+   apt install figlet 
+   
+   figlet vardhan
+   
+  ( or)
+ 
+ mkdir 1 2 3 4 5 6 krishna govi vardha
+ cd krishna 
+ touch hgfd.txt
+ touch gifhedhwh.txt
+ cd ..
+ 
+ exit
+ 
+ docker images
+ 
+ docker ps -a 
+ 
+ docker commit -m "this managed by govi"  srv01  my_centos
+ 
+ docker images
+ 
+ 
+ docker image inspect my_centos
+ 
+ two layes of the image (but actual images it has only one layer)
+ 
+ 
+ ----Dockerfile containes--
+ dockerfile it is set of instructions
+ 
+ FROM ==> base image (ubuntu,centos ,httpd, java)
+ LABEL ==> krishanreddy
+ WORKDIR==> it will create a directory and change directory
+ ENV ==> set up env variable while running
+ ARG==> passing arguments while building
+ RUN ==> installing softwares | run any commands while building
+ EXPOSE ==> you can publish port to understand who read docker file
+ USER ==> which user need to use 
+ HEALTHCHEK ==> to check the health status of application
+ ONBUILD ==> use in child containers 
+ VOLUME ==> storage
+ CMD ==> final execution
+ ENTRYPOINT ==> final exection
+ ADD ==> copy the files to docker image
+ copy the file from  docker host to image
+ copy the file from  remote as well (url's)
+ 
+ COPY ==> copy the file to docker image
+ copy the file from  docker host to image
+ 
+ 
+ mkdir demo
+ cd demo
+ vi Dockerfile
+ 
+ FROM ubuntu:18.04
+ MAINTAINER govi@ericsson.com
+ COPY testfile /code/testfile
+ RUN apt-get -y update
+ CMD echo "This is create form a New image"
+ ENV version=1
+ 
+ save it
+ 
+ cat Dockerfile
+ 
+ docker build -t my_ubuntu .
+ 
+ it got error
+ cause testfile wont created
+ 
+ vi testfile
+ 
+ This is a new test file
+ 
+ save it
+ 
+  docker build -t my_ubuntu .
+  
+  docker images
+  
+ my_ubuntu 
+ 
+ docker run -dit --name cont1 my_ubuntu
+ 
+ docker ps -a 
+ 
+ check the command
+ 
+ To know the what ever in code directory
+ 
+ docker run   --name con2 my_ubuntu ls /code
+ 
+ root@ip-172-31-32-30:~/demo# docker run --name con2 my_ubuntu ls /code
+ 
+ testfile will present
+ 
+ To know the what ever in env directory
+
+ 
+ docker run --name con3 my_ubuntu env
+root@ip-172-31-32-30:~/demo# docker run --name con3 my_ubuntu env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=ebeabc28be0f
+version=1
+HOME=/root
+ 
+ version1 will appear
+ 
+ docker ps -a 
+ 
+ docker stop all containers------------
+ 
+ docker rm all containers
+ rm Dockerfile
+ rm testfile
+ 
+ 
+ ----copy and add-------
+ 
+echo "this is sample file " > sample.txt
+
+echo "this is example file " > example.txt
+
+vi Dockerfile
+
+FROM busybox
+COPY sample.txt /tmp
+ADD example.txt /tmp
+CMD ["sh"] 
+
+save
+
+docker build -t copyaddtest .
+
+docker images
+
+copyaddtest
+
+docker run -it --name copy2 copyaddtest sh
+
+your in docke container
+
+ls -lrt /tmp
+
+it will show the sampl and example file
+
+FEB-20
+
+------  COPY   & ADD  -----------
+
+COPY :
+
+IT ONLY COPY FROM HOST MACHNINE TO DOCKER Image
+
+tarcopy ==> jusy copy the tar file (copy tar file, untar, remove the tar file  )
+
+
+ADD:
+
+
+COPY FROM HOST MACHINE AND URL 'S ALSO
+
+tarcopy==>  it will extract tar file and  remove the tar file
+
+
+touch sampl.txt
+touch kris.txt 
+touch govi.txt
+
+ls
+
+tar -cvzf example.tar.gz ./
+
+ls 
+
+vi Dockerfile
+
+FROM busybox
+ADD example.tar.gz /tmp/
+CMD ["sh"]
+
+save 
+
+docker buid -t copyaddtest:v1 .
+
+docker run -it --name copyaddtest copyaddtest:v1 sh
+
+now your are in container 
+ cd /tmp/
+ ls 
+ will saw the extarcted file
+ 
+ but we are add in docker file zipfile only
+ 
+ 
+vi Dockerfile
+
+FROM busybox
+COPY example.tar.gz /tmp/
+CMD ["sh"]
+
+save 
+
+ 
+ docker build -t copyaddtest:v2 .
+ 
+ docker run -it --name copyaddtest2 copyaddtest:v2 sh
+
+now your are in container 
+ cd /tmp/
+ ls 
+ will saw the exAMPLE.ZIP  file ONLY IT WON'T EXTRACTED
+ 
+ 
+  
+vi Dockerfile
+
+FROM busybox
+WORKDIR /tmp/
+ADD https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.99/bin/apache-tomcat-8.5.99.tar.gz .
+CMD ["sh"]
+
+
+save 
+ https://downloads.apache.org/tomcat/tomcat-9/v9.0.93/bin/apache-tomcat-9.0.93.tar.gz.asc
+ 
+ https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.93/bin/apache-tomcat-9.0.93-windows-x64.zip
+docker build -t test:v10 .
+
+docker images 
+
+docker run -it  --name test10 test:v10 sh
+ls
+will saw the zip file 
+
+exit
+
+insted of using add to download from remote url ..use curl or wget and use &&multilpe commands to execute
+
+
+vi Dockerfile
+
+FROM ubuntu
+WORKDIR /tmp/
+RUN apt-get update 
+RUN apt-get install wget -y 
+RUN wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.99/bin/apache-tomcat-8.5.99.tar.gz  && tar xvf apache-tomcat-8.5.99.tar.gz && apache-tomcat-8.5.99.tar.gz 
+CMD ["sh"]
+
+save
+
+docker build -t test:v15 .
+
+tomcat is won't work for 
+
+krishnareddy also
+
+
+RUN SHELL AND EXEC form
+
+rm Dockerfile
+
+vi Dockerfile
+
+FROM ubuntu
+RUN apt-get update -y 
+RUN apt-get install python3 -y 
+CMD echo "Hello World--a from CMD"
+ENTRYPOINT echo "Hello World --from Entrypoint"
+
+save 
+
+docker buid -t test .
+
+docker run -t test 
+
+
+root@ip-172-31-36-8:~/demo# docker run -t test
+Hello world --a from ENTRYPOINT
+root@ip-172-31-36-8:~/demo#
+
+
+when we are using cmd and entry in same dockerfile it will print ENTRYPOINT level only it won't print cmd level
+
+
+rm dockerfile
+
+we can use CMD in dockerfile multiple times but we can use ENTRYPOINT in dockefile only one time only
+
+vi Dockerfile
+
+FROM ubuntu
+RUN apt-get update -y 
+CMD echo "Hello World --1"
+CMD echo "Hello World --2"
+CMD echo "Hello World --3"
+
+sava \
+
+docker build -t test1 .
+ docker run -t test1 
+ 
+ it will print the docker last line of cmd
+ 
+ ---example of shell form----
+
+vi Dockerfile 
+ 
+ 
+FROM ubuntu
+ENV name krishna reddy
+ENTRYPOINT echo "Hello $name"
+
+save 
+ docker build -t test2 .
+ 
+ docker run -it test2 
+ 
+ -----example of exec form----
+ 
+ 
+ 
+ vi Dockerfile
+ 
+ 
+FROM ubuntu
+ENV name krishna reddy
+ENTRYPOINT ["echo", "Hello, $name"]
+
+save 
+
+docker build -t test3 .
+
+docker run -it test3
+
+Hello $name
+
+
+that's way we need to mention the shell
+
+
+ vi Dockerfile
+ 
+ 
+FROM ubuntu
+ENV name krishna reddy
+ENTRYPOINT ["/bin/bash","-c", "echo Hello, $name"]
+
+
+save 
+
+docker built -t test4 .
+
+docker run -it test4
+
+HELLO krishna reddy will print
+
+in CMD it can be over write 
+
+vi Dockerfile
+
+FROM ubuntu
+RUN apt-get update -y 
+CMD echo "Hello World"
+
+save 
+
+docker build -t test5 .
+
+docker run -it test5
+
+
+hello world will print
+
+
+docker run -it test5 bash 
+it will over write and it will enter in to container
+
+same example with entry point
+
+docker run -it test5 bash 
+
+FROM ubuntu
+RUN apt-get update -y 
+ENTRYPOINT echo "Hello World"
+
+save 
+
+docker build -t test6 .
+
+docker run -it test6
+
+hello world it will print
+
+ docker run -it test6 bash
+ 
+ it will print hello world only 
+ 
+ it can't be over write
+ 
+FEB-21
+
+---onbuild----
+
+it is used for  later
+
+mkdir onbiuld
+cd onbiuld
+
+
+vi Dockerfile
+
+FROM busybox
+ONBUILD RUN echo "will execute later "  
+CMD echo "hello world"
+
+save
+
+docker buid -t myaap .
+
+docker images
+
+vi child_Dockerfile
+
+FROM myaap
+RUN echo "This is child output"
+
+
+
+save 
+
+docker build -t child:v1 -f child_Dockerfile .
+
+cat Dockerfile
+
+cat child_Dockerfile
+
+cd
+
+apt install nginx
+
+pwd
+
+/var/www/html
+
+rw-r--r-- 1 root root  612 Feb 26 17:40 index.nginx-debian.htmlngi
+
+
+vi Dockerfile
+
+FROM nginx:1.16-alpine
+LABEL Author="goverdhan reddy"
+WORKDIR /usr/share/nginx/html 
+ONBUILD COPY index.html .
+
+save
+
+vi index.html
+
+<!DOCTYPE html>
+<html>
+</head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html
+
+
+
+             or 
+			 
+<!doctype html>
+<html>
+<head>
+
+	<h1> This is my website </h1>
+<>head
+</head>
+
+</html>
+
+save
+
+docker build -t mynginx .
+
+docker run -d --name nginxapp -p8082:80 mynginx
+
+take the pulic ip:8082
+
+nginx will disply
+
+vi govi_Dockerfile
+
+
+FROM mynginx 
+
+save 
+
+docker build -t childnignx:v1 -f govi_Dockerfile .
+
+docker container run -d --name vcube-app -p8083:80 childnignx:v1
+
+take the public ip:8083
+
+This is my website will display
+
+
+krishna reddy 11:31 AM
+https://github.com/kubernetes/minikube/releases/tag/v1.19.0
+
+krishna reddy 11:36 AM
+https://portal.azure.com/
+Messages addressed to "Meeting Group Chat" will also appear in the meeting group chat in Team Chat 
+
+
+
+
+
+
+
+
+
+BANPG0265M19051992
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
