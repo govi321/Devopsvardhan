@@ -1,0 +1,67 @@
+Same credentidal used to create
+EKS and aws configure ?
+keys change chesava ?
+
+
+
+https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+
+
+https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+root@ip-172-31-30-237:~# history
+    1  apt update
+    2  sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+    3  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    4  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+    5  sudo apt-get update
+    6  sudo apt-get install -y kubectl
+    7  curl -LO https://dl.k8s.io/release/v1.29.2/bin/linux/amd64/kubectl
+    8  sudo apt update
+    9  curl -LO https://dl.k8s.io/release/v1.29.2/bin/linux/arm64/kubectl
+   10  apt update
+   11  url https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+   12  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+   13  apt update
+   14  apt-secure
+   15  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+   16  chmod +x kubectl
+   17  sudo mv kubectl /usr/local/bin
+   18  kubectl --version
+   19  kubectl version
+   20  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   21  ll
+   22  apt install unzip
+   23  ll
+   24  unzip awscliv2.zip
+   25  sudo ./aws/install
+   26  aws eks list-clusters
+   27  aws configure
+   28  aws eks update-kubeconfig --name Ekscluster --region ap-southeast-1
+   29  aws eks list-clusters
+   30  kubectl get pods
+   31  kubectl get all
+   32  kubectl get nodes
+   33  aws configure
+   34  aws eks update-kubeconfig --name Ekscluster --region ap-southeast-1
+   35  aws eks list-clusters
+   36  kubectl get nodes
+   37  vi ~/.aws/config
+   38  aws configure
+   39  aws eks list-clusters
+   40  kubectl get pods
+   41  kubectl get nodes
+   42  kubectl get all
+   43  awscli version
+   44  awscli --version
+   45  kubectl get nodes
+   46  aws eks update-kubeconfig --name Ekscluster --region ap-southeast-1
+   47  cat /root/.kube/config
+   48  kubectl get pods
+   49  aws configure
+   50  aws eks update-kubeconfig --name Ekscluster --region ap-southeast-1
+   51  aws eks list-clusters
+   52  kubectl get pods
+   53  kubectl get nodes
+   54  history
