@@ -1,0 +1,32 @@
+"AWSTemplateFormatVersion" : "version date",=========>2019-09-09
+
+Description" : "JSON string”  ==>what we creating
+
+ 
+
+“Metadata” : (
+template metadata   ===>more information about the instance and data base
+},
+
+"parameters" : (
+set of parameters ===> keyname, type of instance,security group,database username &pasword, ssh location
+},
+
+Mappings" : (
+set of mappings    ===> which type of instance selecting from here by useing fn &resouces
+},
+
+"conditions" : {
+set of conditions   ==> like if ,ifelse condition 
+},
+
+
+“Resources : {
+set of resources ===>what we need metion in this instaces and packages, tokens like that
+},
+
+outputs" : {
+set of outputs ===> URL like THAT TO ACCESS
+
+}
+}
